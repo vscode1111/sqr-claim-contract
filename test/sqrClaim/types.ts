@@ -1,5 +1,5 @@
-import { DepositEvent, WithdrawEvent } from "~typechain-types/contracts/SQRClaim";
-import { ContextBase } from "~types";
+import { ClaimEvent } from "~typechain-types/contracts/SQRClaim";
+import { ContextBase, EventArgs } from "~types";
 
 type Fixture<T> = () => Promise<T>;
 
@@ -9,10 +9,4 @@ declare module "mocha" {
   }
 }
 
-export interface EventArgs<T> {
-  args: T;
-}
-
-export type DepositEventArgs = DepositEvent.Event & EventArgs<[string, number, number]>;
-
-export type WithdrawEventArgs = WithdrawEvent.Event & EventArgs<[string, number, number]>;
+export type ClaimEventArgs = ClaimEvent.Event & EventArgs<[string, string, number, number]>;

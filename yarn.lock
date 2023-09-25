@@ -7704,9 +7704,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msq-lockup-contract@workspace:.":
+"msq-claim-contract@workspace:.":
   version: 0.0.0-use.local
-  resolution: "msq-lockup-contract@workspace:."
+  resolution: "msq-claim-contract@workspace:."
   dependencies:
     "@commitlint/cli": ^17.7.1
     "@commitlint/config-conventional": ^17.7.0

@@ -1,10 +1,11 @@
 import { expect } from "chai";
-import { TransactionReceipt } from "ethers";
+import { Signer } from "ethers";
+import { signMessage } from "~common";
 import { seedData } from "~seeds";
 import { ContextBase } from "~types";
 
 export async function getSQRTokenBalance(that: ContextBase, address: string) {
-  return that.owner2SQRToken.balanceOf(address);
+  return that.ownerSQRToken.balanceOf(address);
 }
 
 export async function checkTotalSQRBalance(that: ContextBase) {
@@ -15,7 +16,6 @@ export async function checkTotalSQRBalance(that: ContextBase) {
       that.user3Address,
       that.ownerAddress,
       that.owner2Address,
-      that.coldWalletAddress,
       that.sqrTokenAddress,
       that.sqrClaimAddress,
     ]),
@@ -27,6 +27,11 @@ export async function getTotalSQRBalance(that: ContextBase, accounts: string[]):
   return result.reduce((acc, cur) => acc + cur, seedData.zero);
 }
 
-export function findEvent<T>(receipt: TransactionReceipt) {
-  return receipt.logs.find((log: any) => log.fragment) as T;
+export async function signMessageForClaim(signer: Signer, account: string, amount: bigint, transactionId: string) {
+  return signMessage(
+    signer,
+    //account, amount, transactionId
+    ["address", "uint256", "string"],
+    [account, amount, transactionId],
+  );
 }

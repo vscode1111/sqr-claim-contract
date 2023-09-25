@@ -27,14 +27,13 @@ export function getAddressesFromHre(hre: HardhatRuntimeEnvironment) {
 }
 
 export async function getUsers(): Promise<Users> {
-  const [owner, user1, user2, user3, owner2, coldWallet] = await ethers.getSigners();
+  const [owner, user1, user2, user3, owner2] = await ethers.getSigners();
 
   const ownerAddress = await owner.getAddress();
   const user1Address = await user1.getAddress();
   const user2Address = await user2.getAddress();
   const user3Address = await user3.getAddress();
   const owner2Address = await owner2.getAddress();
-  const coldWalletAddress = await coldWallet.getAddress();
 
   return {
     owner,
@@ -47,8 +46,6 @@ export async function getUsers(): Promise<Users> {
     user3Address,
     owner2,
     owner2Address,
-    coldWallet,
-    coldWalletAddress,
   };
 }
 
@@ -56,7 +53,7 @@ export async function getSQRTokenContext(
   users: Users,
   deployData?: string | { newOnwer: string },
 ): Promise<SQRTokenContext> {
-  const { owner, user1, user2, user3, owner2, owner2Address, coldWallet } = users;
+  const { owner, user1, user2, user3, owner2, owner2Address } = users;
 
   const testSQRTokenFactory = (await ethers.getContractFactory(SQR_TOKEN_NAME)) as any as SQRToken__factory;
 
@@ -75,7 +72,6 @@ export async function getSQRTokenContext(
   const user2SQRToken = ownerSQRToken.connect(user2);
   const user3SQRToken = ownerSQRToken.connect(user3);
   const owner2SQRToken = ownerSQRToken.connect(owner2);
-  const coldWalletSQRToken = ownerSQRToken.connect(coldWallet);
 
   return {
     sqrTokenAddress,
@@ -84,15 +80,11 @@ export async function getSQRTokenContext(
     user2SQRToken,
     user3SQRToken,
     owner2SQRToken,
-    coldWalletSQRToken,
   };
 }
 
-export async function getSQRClaimContext(
-  users: Users,
-  deployData?: string | ContractConfig,
-): Promise<SQRClaimContext> {
-  const { owner, user1, user2, user3, owner2, coldWallet } = users;
+export async function getSQRClaimContext(users: Users, deployData?: string | ContractConfig): Promise<SQRClaimContext> {
+  const { owner, user1, user2, user3, owner2 } = users;
 
   const testSQRClaimFactory = (await ethers.getContractFactory(SQR_CLAIM_NAME)) as unknown as SQRClaim__factory;
 
@@ -103,12 +95,7 @@ export async function getSQRClaimContext(
   } else {
     ownerSQRClaim = (await upgrades.deployProxy(
       testSQRClaimFactory,
-      getContractArgs(
-        deployData?.newOwner ?? "",
-        deployData?.sqrToken ?? "",
-        deployData?.coldWallet ?? "",
-        deployData?.balanceLimit ?? BigInt(0),
-      ),
+      getContractArgs(deployData?.sqrToken ?? ""),
       OPTIONS,
     )) as unknown as SQRClaim;
   }
@@ -119,7 +106,6 @@ export async function getSQRClaimContext(
   const user2SQRClaim = ownerSQRClaim.connect(user2);
   const user3SQRClaim = ownerSQRClaim.connect(user3);
   const owner2SQRClaim = ownerSQRClaim.connect(owner2);
-  const coldWalletSQRClaim = ownerSQRClaim.connect(coldWallet);
 
   return {
     sqrClaimAddress,
@@ -128,7 +114,6 @@ export async function getSQRClaimContext(
     user2SQRClaim,
     user3SQRClaim,
     owner2SQRClaim,
-    coldWalletSQRClaim,
   };
 }
 

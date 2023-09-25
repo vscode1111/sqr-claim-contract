@@ -1,17 +1,14 @@
-import { getBytes, keccak256, solidityPackedKeccak256 } from "ethers";
+import { arrayify } from "@ethersproject/bytes";
+import { Signer, keccak256, solidityPackedKeccak256, toUtf8Bytes } from "ethers";
 import { MerkleTree } from "merkletreejs";
 
 export function keccak256FromStr(data: string) {
-  return keccak256(getBytes(data));
-}
-
-interface Signer {
-  signMessage(message: string | ArrayLike<number>): Promise<string>;
+  return keccak256(toUtf8Bytes(data));
 }
 
 export async function signMessage(signer: Signer, types: readonly string[], values: readonly any[]) {
   const hash = solidityPackedKeccak256(types, values);
-  const messageHashBin = hash;
+  const messageHashBin = arrayify(hash);
   return signer.signMessage(messageHashBin);
 }
 

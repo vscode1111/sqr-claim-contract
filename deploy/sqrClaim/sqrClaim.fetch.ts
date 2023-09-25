@@ -14,8 +14,6 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
     const result = {
       owner: await ownerSQRClaim.owner(),
       sqrToken: await ownerSQRClaim.sqrToken(),
-      coldWallet: await ownerSQRClaim.coldWallet(),
-      balanceLimit: await ownerSQRClaim.balanceLimit(),
     };
 
     console.table(result);

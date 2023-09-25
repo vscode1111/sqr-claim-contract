@@ -4,27 +4,23 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "./interfaces/IPermitToken.sol";
+import "./interfaces/IBalance.sol";
 
-contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgradeable {
+contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgradeable, IBalance {
+    using ECDSA for bytes32;
+
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(
-        address _newOwner,
-        address _sqrToken,
-        address _coldWallet,
-        uint256 _balanceLimit
-    ) public initializer {
+    function initialize(address _sqrToken) public initializer {
         __Ownable_init();
         __UUPSUpgradeable_init();
 
-        _transferOwnership(_newOwner);
         sqrToken = IPermitToken(_sqrToken);
-        coldWallet = _coldWallet;
-        balanceLimit = _balanceLimit;
     }
 
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
@@ -32,83 +28,66 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     //Variables, structs, modifiers, events------------------------
 
     IPermitToken public sqrToken;
-    address public coldWallet;
-    uint256 public balanceLimit;
-    uint256 public totalBalance;
 
-    mapping(address => FundItem) private _balances;
+    mapping(bytes32 => TransactionItem) private _transactionIds;
 
-    struct FundItem {
-        uint256 balance;
-        //uint32 lockTime;
+    struct TransactionItem {
+        address account;
+        uint256 amount;
     }
 
-    modifier onlySufficentFunds(address account, uint256 amount) {
-        FundItem storage fund = _balances[account];
-        require(fund.balance >= amount, "Insufficent funds");
-        _;
-    }
-
-    event Deposit(address indexed account, uint256 amount, uint32 timestamp);
-
-    event Withdraw(address indexed account, uint256 amount, uint32 timestamp);
+    event Claim(address indexed account, uint256 amount, bytes32 transactionIdHash, uint32 timestamp);
 
     //Functions-------------------------------------------
-
-    function fetchFundItem(address account) external view returns (FundItem memory) {
-        return _balances[account];
-    }
-
-    function balanceOf(address account) external view returns (uint256) {
-        FundItem storage fund = _balances[account];
-        return fund.balance;
-    }
 
     function getBalance() public view returns (uint256) {
         return sqrToken.balanceOf(address(this));
     }
 
-    function claim(uint256 amount) public payable nonReentrant {
-        address sender = _msgSender();
-
-        require(sqrToken.allowance(sender, address(this)) >= amount, "User must allow to use of funds");
-
-        require(sqrToken.balanceOf(sender) >= amount, "User must have funds");
-
-        FundItem storage fund = _balances[sender];
-
-        uint256 supposedBalance = getBalance() + amount;
-
-        if (supposedBalance > balanceLimit) {
-            uint256 coldRemains = supposedBalance - balanceLimit;
-            uint256 userRemains = amount - coldRemains;
-
-            fund.balance += userRemains;
-
-            sqrToken.transferFrom(sender, address(this), userRemains);
-            sqrToken.transferFrom(sender, coldWallet, coldRemains);
-        } else {
-            fund.balance += amount;
-
-            sqrToken.transferFrom(sender, address(this), amount);
-        }
-
-        totalBalance += amount;
-
-        emit Deposit(sender, amount, uint32(block.timestamp));
+    function getTransactionIdHash(string memory transactionId) public pure returns (bytes32) {
+        return keccak256(abi.encodePacked(transactionId));
     }
 
-    function claimSig(uint256 amount) external {
-        address sender = _msgSender();
+    function getTransactionItem(string memory transactionId) public view returns (bytes32, TransactionItem memory) {
+        bytes32 transactionIdHash = getTransactionIdHash(transactionId);
+        return (transactionIdHash, _transactionIds[transactionIdHash]);
+    }
 
+    function _claim(address account, uint256 amount, string memory transactionId) private nonReentrant {
         require(sqrToken.balanceOf(address(this)) >= amount, "Contract must have sufficient funds");
 
-        FundItem storage fund = _balances[sender];
-        fund.balance -= amount;
-        totalBalance -= amount;
+        (bytes32 transactionIdHash, TransactionItem memory transactionItem) = getTransactionItem(transactionId);
+        require(transactionItem.account == address(0), "This transactionId was used before");
 
-        sqrToken.transfer(sender, amount);
+        _transactionIds[transactionIdHash] = TransactionItem(account, amount);
+        sqrToken.transfer(account, amount);
 
-        emit Withdraw(sender, amount, uint32(block.timestamp));
+        emit Claim(account, amount, transactionIdHash, uint32(block.timestamp));
+    }
+
+    function claim(
+        address account,
+        uint256 amount,
+        string memory transactionId,
+        uint32 timestampLimit
+    ) external payable onlyOwner {
+        require(block.timestamp <= timestampLimit, "Timeout blocker");
+        _claim(account, amount, transactionId);
+    }
+
+    function verifySignature(
+        address account,
+        uint256 amount,
+        string memory transactionId,
+        bytes memory signature
+    ) private view returns (bool) {
+        bytes32 messageHash = keccak256(abi.encodePacked(account, amount, transactionId));
+        address recover = messageHash.toEthSignedMessageHash().recover(signature);
+        return recover == owner();
+    }
+
+    function claimSig(address account, uint256 amount, string memory transactionId, bytes memory signature) external {
+        require(verifySignature(account, amount, transactionId, signature), "Invalid signature");
+        _claim(account, amount, transactionId);
     }
 }

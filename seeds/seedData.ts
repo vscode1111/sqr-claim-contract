@@ -1,5 +1,6 @@
-import { BigNumberish } from "ethers";
-import { toUnixTime, toWei } from "~common";
+import dayjs from "dayjs";
+import { v4 as uuidv4 } from "uuid";
+import { keccak256FromStr, toUnixTime, toWei } from "~common";
 import { DeployNetworkKey } from "~types";
 
 import { defaultNetwork } from "../hardhat.config";
@@ -20,33 +21,21 @@ if (!isTest) {
 
 export const prodContractConfig: Partial<ContractConfig> = {
   sqrToken: "",
-  coldWallet: "",
 };
 
 export const testContractConfig: Partial<ContractConfig> = {
-  newOwner: "0x1D5eeCbD950C22Ec2B5813Ab1D65ED5fFD83F32B",
   sqrToken: "0xCD56577757277861034560D5f166aEB68C4844FB", //My - testName12
-  coldWallet: "0xAca11c3Dde62ACdffE8d9279fDc8AFDD945556A7",
-  balanceLimit: toWei(1000, sqrDecimals),
 };
 
 const extContractConfig = isTest ? testContractConfig : prodContractConfig;
 
 export const contractConfig: ContractConfig = {
-  newOwner: "0x81aFFCB2FaCEcCaE727Fa4b1B2ef534a1Da67791",
   sqrToken: "",
-  coldWallet: "0x81aFFCB2FaCEcCaE727Fa4b1B2ef534a1Da67791",
-  balanceLimit: toWei(1000, sqrDecimals),
   ...extContractConfig,
 };
 
-export function getContractArgs(
-  newOwner: string,
-  sqrToken: string,
-  coldWallet: string,
-  balanceLimit: BigNumberish,
-): DeployContractArgs {
-  return [newOwner, sqrToken, coldWallet, balanceLimit];
+export function getContractArgs(sqrToken: string): DeployContractArgs {
+  return [sqrToken];
 }
 
 export const tokenConfig: TokenConfig = {
@@ -63,26 +52,24 @@ export function getTokenArgs(newOnwer: string): DeployTokenArgs {
 
 const priceDiv = BigInt(1);
 const userInitBalance = toWei(10_000, sqrDecimals);
-const deposit1 = toWei(100, sqrDecimals) / priceDiv;
-const withdraw1 = toWei(30, sqrDecimals) / priceDiv;
-const remains1 = deposit1 - withdraw1;
-const extraDeposit1 = toWei(2500, sqrDecimals) / priceDiv;
-const owner2Withdraw = toWei(300, sqrDecimals);
-// const exptraWithdraw1 = toWei(1000, sqrDecimals) / priceDiv;
+const amount1 = toWei(100, sqrDecimals) / priceDiv;
+const extraAmount1 = toWei(2500, sqrDecimals) / priceDiv;
+const transationId0 = uuidv4();
+const transationId1 = uuidv4();
 
 export const seedData = {
   zero: toWei(0),
   userInitBalance,
   totalAccountBalance: tokenConfig.initMint,
-  deposit1,
-  withdraw1,
-  remains1,
-  deposit2: deposit1 / BigInt(2),
-  withdraw2: withdraw1 / BigInt(2),
-  remains2: remains1 / BigInt(2),
-  extraDeposit1,
-  extraDeposit2: extraDeposit1 / BigInt(2),
-  owner2Withdraw,
+  amount1,
+  amount2: amount1 / BigInt(2),
+  extraAmount1: extraAmount1,
+  extraAmount2: extraAmount1 / BigInt(2),
   now: toUnixTime(),
+  nowPlus1m: toUnixTime(dayjs().add(1, "minute").toDate()),
   timeDelta: 300,
+  transationId0,
+  transationId1,
+  transationIdHash0: keccak256FromStr(transationId0),
+  transationIdHash1: keccak256FromStr(transationId1),
 };
