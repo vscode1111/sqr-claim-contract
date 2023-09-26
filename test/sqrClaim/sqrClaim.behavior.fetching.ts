@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { seedData } from "~seeds";
 
-import { getSQRTokenBalance } from "./utils";
+import { getTokenBalance } from "./utils";
 
 export function shouldBehaveCorrectFetching(): void {
   describe("fetching", () => {
@@ -11,7 +11,7 @@ export function shouldBehaveCorrectFetching(): void {
     });
 
     it("should be correct balances", async function () {
-      expect(await getSQRTokenBalance(this, this.owner2Address)).eq(seedData.totalAccountBalance);
+      expect(await getTokenBalance(this, this.owner2Address)).eq(seedData.totalAccountBalance);
       expect(await this.ownerSQRClaim.getBalance()).eq(seedData.zero);
     });
   });

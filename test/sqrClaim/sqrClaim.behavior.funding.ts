@@ -6,11 +6,11 @@ import { findEvent } from "~utils";
 
 import { errorMessage } from "./testData";
 import { ClaimEventArgs } from "./types";
-import { checkTotalSQRBalance, getSQRTokenBalance, signMessageForClaim } from "./utils";
+import { checkTotalBalance, getTokenBalance, signMessageForClaim } from "./utils";
 
 export function shouldBehaveCorrectControl(): void {
   describe("funding", () => {
-    it("user1 tries to call claimSig without correct signature", async function () {
+    it("user1 tries to claimSig without correct signature", async function () {
       const signature = await signMessageForClaim(
         this.user1,
         this.user1Address,
@@ -22,7 +22,7 @@ export function shouldBehaveCorrectControl(): void {
       ).revertedWith(errorMessage.invalidSignature);
     });
 
-    it("user1 tries to call claimSig without enough funds in contract", async function () {
+    it("user1 tries to claimSig without enough funds in contract", async function () {
       const signature = await signMessageForClaim(
         this.owner,
         this.user1Address,
@@ -34,7 +34,7 @@ export function shouldBehaveCorrectControl(): void {
       ).revertedWith(errorMessage.contractMustHaveSufficientFunds);
     });
 
-    it("user2 tries to call claimSig without enough funds in contract", async function () {
+    it("user2 tries to claimSig without enough funds in contract", async function () {
       const signature = await signMessageForClaim(
         this.owner,
         this.user2Address,
@@ -52,24 +52,24 @@ export function shouldBehaveCorrectControl(): void {
       });
 
       it(INITIAL_POSITIVE_CHECK_TEST_TITLE, async function () {
-        expect(await getSQRTokenBalance(this, this.sqrClaimAddress)).eq(seedData.userInitBalance);
-        expect(await getSQRTokenBalance(this, this.user1Address)).eq(seedData.zero);
-        expect(await getSQRTokenBalance(this, this.user2Address)).eq(seedData.zero);
-        expect(await getSQRTokenBalance(this, this.user3Address)).eq(seedData.zero);
-        expect(await getSQRTokenBalance(this, this.ownerAddress)).eq(seedData.zero);
-        expect(await getSQRTokenBalance(this, this.owner2Address)).eq(
+        expect(await getTokenBalance(this, this.sqrClaimAddress)).eq(seedData.userInitBalance);
+        expect(await getTokenBalance(this, this.user1Address)).eq(seedData.zero);
+        expect(await getTokenBalance(this, this.user2Address)).eq(seedData.zero);
+        expect(await getTokenBalance(this, this.user3Address)).eq(seedData.zero);
+        expect(await getTokenBalance(this, this.ownerAddress)).eq(seedData.zero);
+        expect(await getTokenBalance(this, this.owner2Address)).eq(
           seedData.totalAccountBalance - seedData.userInitBalance,
         );
-        await checkTotalSQRBalance(this);
+        await checkTotalBalance(this);
       });
 
-      it("user1 tries to call claim without permission", async function () {
+      it("user1 tries to claim without permission", async function () {
         await expect(
           this.user1SQRClaim.claim(this.user2Address, seedData.amount2, seedData.transationId0, seedData.nowPlus1m),
         ).revertedWith(errorMessage.onlyOwner);
       });
 
-      it("owner tries to call claim in timeout case 1m", async function () {
+      it("owner tries to claim in timeout case 1m", async function () {
         await time.increaseTo(seedData.nowPlus1m);
 
         await expect(
@@ -77,7 +77,7 @@ export function shouldBehaveCorrectControl(): void {
         ).revertedWith(errorMessage.timeoutBlocker);
       });
 
-      it("owner calls claim correctly and check Claim event", async function () {
+      it("owner claims correctly and check Claim event", async function () {
         const receipt = await waitTx(
           this.ownerSQRClaim.claim(this.user1Address, seedData.amount1, seedData.transationId0, seedData.nowPlus1m),
         );
@@ -89,10 +89,10 @@ export function shouldBehaveCorrectControl(): void {
         expect(transationIdHash0).eq(seedData.transationIdHash0);
         expect(timestamp).closeTo(seedData.now, seedData.timeDelta);
 
-        await checkTotalSQRBalance(this);
+        await checkTotalBalance(this);
       });
 
-      it("user1 calls claimSig correctly and check Claim event", async function () {
+      it("user1 claims correctly using signature and check Claim event", async function () {
         const signature = await signMessageForClaim(
           this.owner,
           this.user1Address,
@@ -111,10 +111,10 @@ export function shouldBehaveCorrectControl(): void {
         expect(transationIdHash0).eq(seedData.transationIdHash0);
         expect(timestamp).closeTo(seedData.now, seedData.timeDelta);
 
-        await checkTotalSQRBalance(this);
+        await checkTotalBalance(this);
       });
 
-      it("user2 calls claimSig correctly and check Claim event", async function () {
+      it("user2 claimSig correctly and check Claim event", async function () {
         const signature = await signMessageForClaim(
           this.owner,
           this.user2Address,
@@ -123,7 +123,7 @@ export function shouldBehaveCorrectControl(): void {
         );
 
         this.user1SQRClaim.claimSig(this.user2Address, seedData.amount2, seedData.transationId0, signature);
-        await checkTotalSQRBalance(this);
+        await checkTotalBalance(this);
       });
 
       describe("user1 claimed with signature", () => {
@@ -139,9 +139,9 @@ export function shouldBehaveCorrectControl(): void {
         });
 
         it(INITIAL_POSITIVE_CHECK_TEST_TITLE, async function () {
-          expect(await getSQRTokenBalance(this, this.sqrClaimAddress)).eq(seedData.userInitBalance - seedData.amount1);
-          expect(await getSQRTokenBalance(this, this.user1Address)).eq(seedData.amount1);
-          await checkTotalSQRBalance(this);
+          expect(await getTokenBalance(this, this.sqrClaimAddress)).eq(seedData.userInitBalance - seedData.amount1);
+          expect(await getTokenBalance(this, this.user1Address)).eq(seedData.amount1);
+          await checkTotalBalance(this);
         });
 
         it("user1 tries to claim twice with signature", async function () {
@@ -175,11 +175,11 @@ export function shouldBehaveCorrectControl(): void {
           });
 
           it(INITIAL_POSITIVE_CHECK_TEST_TITLE, async function () {
-            expect(await getSQRTokenBalance(this, this.sqrClaimAddress)).eq(
+            expect(await getTokenBalance(this, this.sqrClaimAddress)).eq(
               seedData.userInitBalance - seedData.amount1 - seedData.extraAmount1,
             );
-            expect(await getSQRTokenBalance(this, this.user1Address)).eq(seedData.amount1 + seedData.extraAmount1);
-            await checkTotalSQRBalance(this);
+            expect(await getTokenBalance(this, this.user1Address)).eq(seedData.amount1 + seedData.extraAmount1);
+            await checkTotalBalance(this);
           });
         });
       });

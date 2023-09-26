@@ -4,11 +4,11 @@ import { signMessage } from "~common";
 import { seedData } from "~seeds";
 import { ContextBase } from "~types";
 
-export async function getSQRTokenBalance(that: ContextBase, address: string) {
+export async function getTokenBalance(that: ContextBase, address: string) {
   return that.ownerSQRToken.balanceOf(address);
 }
 
-export async function checkTotalSQRBalance(that: ContextBase) {
+export async function checkTotalBalance(that: ContextBase) {
   expect(
     await getTotalSQRBalance(that, [
       that.user1Address,
@@ -23,7 +23,7 @@ export async function checkTotalSQRBalance(that: ContextBase) {
 }
 
 export async function getTotalSQRBalance(that: ContextBase, accounts: string[]): Promise<bigint> {
-  const result = await Promise.all(accounts.map((address) => getSQRTokenBalance(that, address)));
+  const result = await Promise.all(accounts.map((address) => getTokenBalance(that, address)));
   return result.reduce((acc, cur) => acc + cur, seedData.zero);
 }
 

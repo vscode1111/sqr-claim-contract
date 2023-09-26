@@ -2,31 +2,20 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { callWithTimerHre } from "~common";
 import { SQR_CLAIM_NAME } from "~constants";
-import { getAddressesFromHre, getSQRClaimContext, getUsers } from "~utils";
+import { contractConfig } from "~seeds";
+import { smokeTest } from "~test";
+import { getAddressesFromHre, getContext } from "~utils";
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<void> => {
   await callWithTimerHre(async () => {
     const { sqrClaimAddress } = await getAddressesFromHre(hre);
     console.log(`${SQR_CLAIM_NAME} ${sqrClaimAddress} is fetching...`);
-    const users = await getUsers();
-    const { ownerSQRClaim } = await getSQRClaimContext(users, sqrClaimAddress);
-
-    const [owner, sqrToken, balance] = await Promise.all([
-      ownerSQRClaim.owner(),
-      ownerSQRClaim.sqrToken(),
-      ownerSQRClaim.getBalance(),
-    ]);
-
-    const result = {
-      owner,
-      sqrToken,
-      balance,
-    };
-
-    console.table(result);
+    const sqrTokenAddress = contractConfig.sqrToken;
+    const context = await getContext(sqrTokenAddress, sqrClaimAddress);
+    await smokeTest(context);
   }, hre);
 };
 
-func.tags = [`${SQR_CLAIM_NAME}:fetch`];
+func.tags = [`${SQR_CLAIM_NAME}:smoke-test`];
 
 export default func;

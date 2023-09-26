@@ -117,7 +117,7 @@ export async function getSQRClaimContext(users: Users, deployData?: string | Con
   };
 }
 
-export async function getContext(sqrClaimAddress: string, sqrTokenAddress: string): Promise<ContextBase> {
+export async function getContext(sqrTokenAddress: string, sqrClaimAddress: string): Promise<ContextBase> {
   const users = await getUsers();
   const sqrTokenContext = await getSQRTokenContext(users, sqrTokenAddress);
   const sqrClaimContext = await getSQRClaimContext(users, sqrClaimAddress);

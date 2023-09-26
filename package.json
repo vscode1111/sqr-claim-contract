@@ -14,6 +14,7 @@
     "deploy:verify": "hardhat deploy --tags SQRClaim:verify",
     "deploy:fetch": "hardhat deploy --tags SQRClaim:fetch",
     "deploy:withdraw": "hardhat deploy --tags SQRClaim:withdraw",
+    "deploy:smoke-test": "hardhat deploy --tags SQRClaim:smoke-test",
     "deploy:publish-abi": "hardhat deploy --tags SQRClaim:publish-abi",
     "deploy:transfer-ownership": "hardhat deploy --tags SQRClaim:transfer-ownership",
     "lint": "yarn lint:sol && yarn lint:ts && yarn prettier:check",

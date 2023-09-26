@@ -4,6 +4,7 @@ import { ContextBase } from "~types";
 
 import { shouldBehaveCorrectFetching } from "./sqrClaim.behavior.fetching";
 import { shouldBehaveCorrectControl } from "./sqrClaim.behavior.funding";
+import { shouldBehaveCorrectSmokeTest } from "./sqrClaim.behavior.smoke-test";
 import { deploySQRClaimContractFixture } from "./sqrClaim.fixture";
 
 describe(SQR_CLAIM_NAME, function () {
@@ -20,4 +21,5 @@ describe(SQR_CLAIM_NAME, function () {
 
   shouldBehaveCorrectFetching();
   shouldBehaveCorrectControl();
+  shouldBehaveCorrectSmokeTest();
 });
