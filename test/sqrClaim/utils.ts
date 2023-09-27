@@ -27,11 +27,17 @@ export async function getTotalSQRBalance(that: ContextBase, accounts: string[]):
   return result.reduce((acc, cur) => acc + cur, seedData.zero);
 }
 
-export async function signMessageForClaim(signer: Signer, account: string, amount: bigint, transactionId: string) {
+export async function signMessageForClaim(
+  signer: Signer,
+  account: string,
+  amount: bigint,
+  transactionId: string,
+  timestampLimit: number,
+) {
   return signMessage(
     signer,
-    //account, amount, transactionId
-    ["address", "uint256", "string"],
-    [account, amount, transactionId],
+    //account, amount, transactionId, timestampLimit
+    ["address", "uint256", "string", "uint32"],
+    [account, amount, transactionId, timestampLimit],
   );
 }

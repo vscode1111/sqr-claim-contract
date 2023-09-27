@@ -8,7 +8,7 @@ import { getContractArgsEx } from "./utils";
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<void> => {
   await callWithTimerHre(async () => {
-    const { sqrClaimAddress: sqrTokenAddress } = await getAddressesFromHre(hre);
+    const { sqrClaimAddress: sqrTokenAddress } = getAddressesFromHre(hre);
     console.log(`${SQR_CLAIM_NAME} ${sqrTokenAddress} is verify...`);
     await verifyContract(sqrTokenAddress, hre, getContractArgsEx());
   }, hre);

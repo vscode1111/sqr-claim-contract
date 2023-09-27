@@ -54,11 +54,23 @@ export async function ownerClaimsToUser1(that: ContextBase) {
 export async function user1ClaimsSig(that: ContextBase) {
   console.log(labels.user1ClaimsSig);
 
-  const signature = await signMessageForClaim(that.owner, that.user1Address, seedData.amount1, seedData.transationId1);
+  const signature = await signMessageForClaim(
+    that.owner,
+    that.user1Address,
+    seedData.amount1,
+    seedData.transationId1,
+    seedData.nowPlus1m,
+  );
   console.log(`signature: ${signature}`);
 
   const receipt = await waitTx(
-    that.user1SQRClaim.claimSig(that.user1Address, seedData.amount1, seedData.transationId1, signature),
+    that.user1SQRClaim.claimSig(
+      that.user1Address,
+      seedData.amount1,
+      seedData.transationId1,
+      seedData.nowPlus1m,
+      signature,
+    ),
     "claimSig",
   );
   const eventLog = findEvent<ClaimEventArgs>(receipt);

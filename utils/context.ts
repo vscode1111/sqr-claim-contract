@@ -86,15 +86,15 @@ export async function getSQRTokenContext(
 export async function getSQRClaimContext(users: Users, deployData?: string | ContractConfig): Promise<SQRClaimContext> {
   const { owner, user1, user2, user3, owner2 } = users;
 
-  const testSQRClaimFactory = (await ethers.getContractFactory(SQR_CLAIM_NAME)) as unknown as SQRClaim__factory;
+  const sqrClaimFactory = (await ethers.getContractFactory(SQR_CLAIM_NAME)) as unknown as SQRClaim__factory;
 
   let ownerSQRClaim: SQRClaim;
 
   if (typeof deployData === "string") {
-    ownerSQRClaim = testSQRClaimFactory.connect(owner).attach(deployData) as SQRClaim;
+    ownerSQRClaim = sqrClaimFactory.connect(owner).attach(deployData) as SQRClaim;
   } else {
     ownerSQRClaim = (await upgrades.deployProxy(
-      testSQRClaimFactory,
+      sqrClaimFactory,
       getContractArgs(deployData?.sqrToken ?? ""),
       OPTIONS,
     )) as unknown as SQRClaim;
@@ -108,6 +108,7 @@ export async function getSQRClaimContext(users: Users, deployData?: string | Con
   const owner2SQRClaim = ownerSQRClaim.connect(owner2);
 
   return {
+    sqrClaimFactory,
     sqrClaimAddress,
     ownerSQRClaim,
     user1SQRClaim,

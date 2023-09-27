@@ -11,6 +11,7 @@
     "deploy": "hardhat deploy",
     "deploy:accounts": "hardhat deploy --tags accounts",
     "deploy:deploy": "hardhat deploy --tags SQRClaim:deploy",
+    "deploy:upgrade": "hardhat deploy --tags SQRClaim:upgrade",
     "deploy:verify": "hardhat deploy --tags SQRClaim:verify",
     "deploy:fetch": "hardhat deploy --tags SQRClaim:fetch",
     "deploy:withdraw": "hardhat deploy --tags SQRClaim:withdraw",

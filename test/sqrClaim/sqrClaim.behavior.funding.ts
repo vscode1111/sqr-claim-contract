@@ -16,9 +16,16 @@ export function shouldBehaveCorrectControl(): void {
         this.user1Address,
         seedData.amount1,
         seedData.transationId0,
+        seedData.nowPlus1m,
       );
       await expect(
-        this.user1SQRClaim.claimSig(this.user1Address, seedData.amount1, seedData.transationId0, signature),
+        this.user1SQRClaim.claimSig(
+          this.user1Address,
+          seedData.amount1,
+          seedData.transationId0,
+          seedData.nowPlus1m,
+          signature,
+        ),
       ).revertedWith(errorMessage.invalidSignature);
     });
 
@@ -28,9 +35,17 @@ export function shouldBehaveCorrectControl(): void {
         this.user1Address,
         seedData.amount1,
         seedData.transationId0,
+        seedData.nowPlus1m,
       );
+
       await expect(
-        this.user1SQRClaim.claimSig(this.user1Address, seedData.amount1, seedData.transationId0, signature),
+        this.user1SQRClaim.claimSig(
+          this.user1Address,
+          seedData.amount1,
+          seedData.transationId0,
+          seedData.nowPlus1m,
+          signature,
+        ),
       ).revertedWith(errorMessage.contractMustHaveSufficientFunds);
     });
 
@@ -40,9 +55,17 @@ export function shouldBehaveCorrectControl(): void {
         this.user2Address,
         seedData.amount2,
         seedData.transationId0,
+        seedData.nowPlus1m,
       );
+
       await expect(
-        this.user1SQRClaim.claimSig(this.user2Address, seedData.amount2, seedData.transationId0, signature),
+        this.user1SQRClaim.claimSig(
+          this.user2Address,
+          seedData.amount2,
+          seedData.transationId0,
+          seedData.nowPlus1m,
+          signature,
+        ),
       ).revertedWith(errorMessage.contractMustHaveSufficientFunds);
     });
 
@@ -77,6 +100,28 @@ export function shouldBehaveCorrectControl(): void {
         ).revertedWith(errorMessage.timeoutBlocker);
       });
 
+      it("owner tries to claim with signature in timeout case 1m", async function () {
+        await time.increaseTo(seedData.nowPlus1m);
+
+        const signature = await signMessageForClaim(
+          this.owner,
+          this.user1Address,
+          seedData.amount1,
+          seedData.transationId0,
+          seedData.nowPlus1m,
+        );
+
+        await expect(
+          this.ownerSQRClaim.claimSig(
+            this.user1Address,
+            seedData.amount1,
+            seedData.transationId0,
+            seedData.nowPlus1m,
+            signature,
+          ),
+        ).revertedWith(errorMessage.timeoutBlocker);
+      });
+
       it("owner claims correctly and check Claim event", async function () {
         const receipt = await waitTx(
           this.ownerSQRClaim.claim(this.user1Address, seedData.amount1, seedData.transationId0, seedData.nowPlus1m),
@@ -98,10 +143,17 @@ export function shouldBehaveCorrectControl(): void {
           this.user1Address,
           seedData.amount1,
           seedData.transationId0,
+          seedData.nowPlus1m,
         );
 
         const receipt = await waitTx(
-          this.user1SQRClaim.claimSig(this.user1Address, seedData.amount1, seedData.transationId0, signature),
+          this.user1SQRClaim.claimSig(
+            this.user1Address,
+            seedData.amount1,
+            seedData.transationId0,
+            seedData.nowPlus1m,
+            signature,
+          ),
         );
         const eventLog = findEvent<ClaimEventArgs>(receipt);
         expect(eventLog).not.undefined;
@@ -120,9 +172,16 @@ export function shouldBehaveCorrectControl(): void {
           this.user2Address,
           seedData.amount2,
           seedData.transationId0,
+          seedData.nowPlus1m,
         );
 
-        this.user1SQRClaim.claimSig(this.user2Address, seedData.amount2, seedData.transationId0, signature);
+        this.user1SQRClaim.claimSig(
+          this.user2Address,
+          seedData.amount2,
+          seedData.transationId0,
+          seedData.nowPlus1m,
+          signature,
+        );
         await checkTotalBalance(this);
       });
 
@@ -133,9 +192,16 @@ export function shouldBehaveCorrectControl(): void {
             this.user1Address,
             seedData.amount1,
             seedData.transationId0,
+            seedData.nowPlus1m,
           );
 
-          await this.user1SQRClaim.claimSig(this.user1Address, seedData.amount1, seedData.transationId0, signature);
+          await this.user1SQRClaim.claimSig(
+            this.user1Address,
+            seedData.amount1,
+            seedData.transationId0,
+            seedData.nowPlus1m,
+            signature,
+          );
         });
 
         it(INITIAL_POSITIVE_CHECK_TEST_TITLE, async function () {
@@ -150,10 +216,17 @@ export function shouldBehaveCorrectControl(): void {
             this.user1Address,
             seedData.amount1,
             seedData.transationId0,
+            seedData.nowPlus1m,
           );
 
           await expect(
-            this.user1SQRClaim.claimSig(this.user1Address, seedData.amount1, seedData.transationId0, signature),
+            this.user1SQRClaim.claimSig(
+              this.user1Address,
+              seedData.amount1,
+              seedData.transationId0,
+              seedData.nowPlus1m,
+              signature,
+            ),
           ).revertedWith(errorMessage.transactionIdWasUsedBefore);
         });
 
@@ -164,12 +237,14 @@ export function shouldBehaveCorrectControl(): void {
               this.user1Address,
               seedData.extraAmount1,
               seedData.transationId1,
+              seedData.nowPlus1m,
             );
 
             await this.user1SQRClaim.claimSig(
               this.user1Address,
               seedData.extraAmount1,
               seedData.transationId1,
+              seedData.nowPlus1m,
               signature,
             );
           });

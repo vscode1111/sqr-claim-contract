@@ -8,7 +8,7 @@ import { getAddressesFromHre, getContext } from "~utils";
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<void> => {
   await callWithTimerHre(async () => {
-    const { sqrClaimAddress } = await getAddressesFromHre(hre);
+    const { sqrClaimAddress } = getAddressesFromHre(hre);
     console.log(`${SQR_CLAIM_NAME} ${sqrClaimAddress} is fetching...`);
     const sqrTokenAddress = contractConfig.sqrToken;
     const context = await getContext(sqrTokenAddress, sqrClaimAddress);

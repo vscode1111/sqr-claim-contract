@@ -79,15 +79,23 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
         address account,
         uint256 amount,
         string memory transactionId,
+        uint32 timestampLimit,
         bytes memory signature
     ) private view returns (bool) {
-        bytes32 messageHash = keccak256(abi.encodePacked(account, amount, transactionId));
+        bytes32 messageHash = keccak256(abi.encodePacked(account, amount, transactionId, timestampLimit));
         address recover = messageHash.toEthSignedMessageHash().recover(signature);
         return recover == owner();
     }
 
-    function claimSig(address account, uint256 amount, string memory transactionId, bytes memory signature) external {
-        require(verifySignature(account, amount, transactionId, signature), "Invalid signature");
+    function claimSig(
+        address account,
+        uint256 amount,
+        string memory transactionId,
+        uint32 timestampLimit,
+        bytes memory signature
+    ) external {
+        require(block.timestamp <= timestampLimit, "Timeout blocker");
+        require(verifySignature(account, amount, transactionId, timestampLimit, signature), "Invalid signature");
         _claim(account, amount, transactionId);
     }
 }

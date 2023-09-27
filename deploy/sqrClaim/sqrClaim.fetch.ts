@@ -6,7 +6,7 @@ import { getAddressesFromHre, getSQRClaimContext, getUsers } from "~utils";
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<void> => {
   await callWithTimerHre(async () => {
-    const { sqrClaimAddress } = await getAddressesFromHre(hre);
+    const { sqrClaimAddress } = getAddressesFromHre(hre);
     console.log(`${SQR_CLAIM_NAME} ${sqrClaimAddress} is fetching...`);
     const users = await getUsers();
     const { ownerSQRClaim } = await getSQRClaimContext(users, sqrClaimAddress);
