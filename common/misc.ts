@@ -1,4 +1,4 @@
-import { toNumber } from "./converts";
+import { toNumber } from './converts';
 
 export function printBigNumber(value: BigInt, factor = 1, fractionDigits = 3): string {
   return toNumber(value.toString(), factor).toFixed(fractionDigits);

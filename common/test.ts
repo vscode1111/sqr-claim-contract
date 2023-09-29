@@ -1,6 +1,6 @@
-import { expect } from "chai";
+import { expect } from 'chai';
 
-export const INITIAL_POSITIVE_CHECK_TEST_TITLE = "initial positive check";
+export const INITIAL_POSITIVE_CHECK_TEST_TITLE = 'initial positive check';
 
 export async function expectThrowsAsync(method: () => Promise<any>, errorMessage: string) {
   let error: any = null;
@@ -9,7 +9,7 @@ export async function expectThrowsAsync(method: () => Promise<any>, errorMessage
   } catch (err) {
     error = err;
   }
-  expect(error).an("Error");
+  expect(error).an('Error');
   if (errorMessage) {
     expect(error?.message).eq(errorMessage);
   }
@@ -20,7 +20,7 @@ export function vmEsceptionText(text: string) {
 }
 
 export function includes(text: any, value: string) {
-  if (typeof text === "string") {
+  if (typeof text === 'string') {
     return text.includes(value);
   }
   if (Array.isArray(text)) {
@@ -34,9 +34,9 @@ export function includes(text: any, value: string) {
 }
 
 export function errorHandler(error: object, message: string) {
-  if ("reason" in error) {
+  if ('reason' in error) {
     expect(includes(error.reason, message)).eq(true);
-  } else if ("message" in error) {
+  } else if ('message' in error) {
     expect(includes(error.message, message)).eq(true);
   }
 }
@@ -46,5 +46,5 @@ export function getNow() {
 }
 
 export const commonErrorMessage = {
-  onlyOwner: "Ownable: caller is not the owner",
+  onlyOwner: 'Ownable: caller is not the owner',
 };

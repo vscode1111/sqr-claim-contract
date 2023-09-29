@@ -2,5 +2,5 @@
 pragma solidity ^0.8.17;
 
 interface IBalance {
-    function getBalance() external view returns (uint256);
+  function getBalance() external view returns (uint256);
 }

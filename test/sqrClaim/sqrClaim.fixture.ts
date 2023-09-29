@@ -1,5 +1,5 @@
-import { ContextBase } from "~types";
-import { getSQRClaimContext, getSQRTokenContext, getUsers } from "~utils";
+import { ContextBase } from '~types';
+import { getSQRClaimContext, getSQRTokenContext, getUsers } from '~utils';
 
 export async function deploySQRClaimContractFixture(): Promise<ContextBase> {
   const users = await getUsers();

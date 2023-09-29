@@ -1,12 +1,11 @@
-import { DeployFunction } from "hardhat-deploy/types";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { callWithTimerHre, sleep, verifyContract } from "~common";
-import { SQR_CLAIM_NAME } from "~constants";
-import { contractConfig } from "~seeds";
-import { getSQRClaimContext, getUsers } from "~utils";
-
-import { verifyRequired } from "./deployData";
-import { getContractArgsEx } from "./utils";
+import { DeployFunction } from 'hardhat-deploy/types';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { callWithTimerHre, sleep, verifyContract } from '~common';
+import { SQR_CLAIM_NAME } from '~constants';
+import { contractConfig } from '~seeds';
+import { getSQRClaimContext, getUsers } from '~utils';
+import { verifyRequired } from './deployData';
+import { getContractArgsEx } from './utils';
 
 const pauseTime = 10;
 

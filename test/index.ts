@@ -1,1 +1,1 @@
-export * from "./sqrClaim";
+export * from './sqrClaim';

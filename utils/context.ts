@@ -1,18 +1,25 @@
-import { DeployProxyOptions } from "@openzeppelin/hardhat-upgrades/dist/utils";
-import { ethers, upgrades } from "hardhat";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { getNetworkName } from "~common";
-import { SQR_CLAIM_NAME, SQR_TOKEN_NAME, TOKENS } from "~constants";
-import { ContractConfig, getContractArgs, getTokenArgs } from "~seeds";
-import { SQRClaim } from "~typechain-types/contracts/SQRClaim";
-import { SQRToken } from "~typechain-types/contracts/SQRToken";
-import { SQRClaim__factory } from "~typechain-types/factories/contracts/SQRClaim__factory";
-import { SQRToken__factory } from "~typechain-types/factories/contracts/SQRToken__factory";
-import { Addresses, ContextBase, DeployNetworks, SQRClaimContext, SQRTokenContext, Users } from "~types";
+import { DeployProxyOptions } from '@openzeppelin/hardhat-upgrades/dist/utils';
+import { ethers, upgrades } from 'hardhat';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { getNetworkName } from '~common';
+import { SQR_CLAIM_NAME, SQR_TOKEN_NAME, TOKENS } from '~constants';
+import { ContractConfig, getContractArgs, getTokenArgs } from '~seeds';
+import { SQRClaim } from '~typechain-types/contracts/SQRClaim';
+import { SQRToken } from '~typechain-types/contracts/SQRToken';
+import { SQRClaim__factory } from '~typechain-types/factories/contracts/SQRClaim__factory';
+import { SQRToken__factory } from '~typechain-types/factories/contracts/SQRToken__factory';
+import {
+  Addresses,
+  ContextBase,
+  DeployNetworks,
+  SQRClaimContext,
+  SQRTokenContext,
+  Users,
+} from '~types';
 
 const OPTIONS: DeployProxyOptions = {
-  initializer: "initialize",
-  kind: "uups",
+  initializer: 'initialize',
+  kind: 'uups',
 };
 
 export function getAddresses(network: keyof DeployNetworks): Addresses {
@@ -55,11 +62,13 @@ export async function getSQRTokenContext(
 ): Promise<SQRTokenContext> {
   const { owner, user1, user2, user3, owner2, owner2Address } = users;
 
-  const testSQRTokenFactory = (await ethers.getContractFactory(SQR_TOKEN_NAME)) as any as SQRToken__factory;
+  const testSQRTokenFactory = (await ethers.getContractFactory(
+    SQR_TOKEN_NAME,
+  )) as any as SQRToken__factory;
 
   let ownerSQRToken: SQRToken;
 
-  if (typeof deployData === "string") {
+  if (typeof deployData === 'string') {
     ownerSQRToken = testSQRTokenFactory.connect(owner).attach(deployData) as SQRToken;
   } else {
     const newOnwer = deployData?.newOnwer ?? owner2Address;
@@ -83,19 +92,24 @@ export async function getSQRTokenContext(
   };
 }
 
-export async function getSQRClaimContext(users: Users, deployData?: string | ContractConfig): Promise<SQRClaimContext> {
+export async function getSQRClaimContext(
+  users: Users,
+  deployData?: string | ContractConfig,
+): Promise<SQRClaimContext> {
   const { owner, user1, user2, user3, owner2 } = users;
 
-  const sqrClaimFactory = (await ethers.getContractFactory(SQR_CLAIM_NAME)) as unknown as SQRClaim__factory;
+  const sqrClaimFactory = (await ethers.getContractFactory(
+    SQR_CLAIM_NAME,
+  )) as unknown as SQRClaim__factory;
 
   let ownerSQRClaim: SQRClaim;
 
-  if (typeof deployData === "string") {
+  if (typeof deployData === 'string') {
     ownerSQRClaim = sqrClaimFactory.connect(owner).attach(deployData) as SQRClaim;
   } else {
     ownerSQRClaim = (await upgrades.deployProxy(
       sqrClaimFactory,
-      getContractArgs(deployData?.sqrToken ?? ""),
+      getContractArgs(deployData?.sqrToken ?? ''),
       OPTIONS,
     )) as unknown as SQRClaim;
   }
@@ -118,7 +132,10 @@ export async function getSQRClaimContext(users: Users, deployData?: string | Con
   };
 }
 
-export async function getContext(sqrTokenAddress: string, sqrClaimAddress: string): Promise<ContextBase> {
+export async function getContext(
+  sqrTokenAddress: string,
+  sqrClaimAddress: string,
+): Promise<ContextBase> {
   const users = await getUsers();
   const sqrTokenContext = await getSQRTokenContext(users, sqrTokenAddress);
   const sqrClaimContext = await getSQRClaimContext(users, sqrClaimAddress);

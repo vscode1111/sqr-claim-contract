@@ -1,4 +1,4 @@
-import { BigNumberish, formatEther, formatUnits, parseUnits } from "ethers";
+import { BigNumberish, formatEther, formatUnits, parseUnits } from 'ethers';
 
 export function toWei(value: BigNumberish, unitName?: BigNumberish): bigint {
   return BigInt(parseUnits(String(value), unitName));

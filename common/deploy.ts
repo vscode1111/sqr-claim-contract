@@ -1,11 +1,10 @@
-import { TransactionReceipt, TransactionResponse } from "ethers";
-import { ethers } from "hardhat";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import _ from "lodash";
-import { DeployNetworks } from "~types";
-
-import { DiffArray } from "./DiffArray";
-import { toNumber } from "./converts";
+import { TransactionReceipt, TransactionResponse } from 'ethers';
+import { ethers } from 'hardhat';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import _ from 'lodash';
+import { DeployNetworks } from '~types';
+import { DiffArray } from './DiffArray';
+import { toNumber } from './converts';
 
 export const DECIMAL_FACTOR = 1e18;
 export const FRACTION_DIGITS = 3;
@@ -21,7 +20,7 @@ export async function getBalances() {
 }
 
 export function printBalances(balances?: number[]) {
-  return `${balances?.map((balance) => balance.toFixed(FRACTION_DIGITS)).join(", ")}`;
+  return `${balances?.map((balance) => balance.toFixed(FRACTION_DIGITS)).join(', ')}`;
 }
 export function printSum(balances?: number[]) {
   return _.sum(balances).toFixed(FRACTION_DIGITS);
@@ -49,13 +48,15 @@ export async function callWithTimerHre(
 ) {
   const startTime = new Date();
   let diffArray;
-  let extText = "";
+  let extText = '';
 
   if (hre) {
     const name = getNetworkName(hre);
     const balances = await getBalances();
     diffArray = new DiffArray(balances);
-    extText = `, network: ${name}, balances: ${printBalances(balances)} = ${_.sum(balances).toFixed(FRACTION_DIGITS)}`;
+    extText = `, network: ${name}, balances: ${printBalances(balances)} = ${_.sum(balances).toFixed(
+      FRACTION_DIGITS,
+    )}`;
   }
 
   const startMessage = `->Function was started at ${startTime.toLocaleTimeString()}${extText}`;
@@ -67,9 +68,9 @@ export async function callWithTimerHre(
   if (hre) {
     const balances = await getBalances();
     const costDiff = diffArray?.diff(balances);
-    extText = `, balances: ${printBalances(balances)} = ${printSum(balances)}, costs: ${printBalances(
-      costDiff,
-    )} = ${printSum(costDiff)}`;
+    extText = `, balances: ${printBalances(balances)} = ${printSum(
+      balances,
+    )}, costs: ${printBalances(costDiff)} = ${printSum(costDiff)}`;
   }
 
   const finishMessage = finishMessageFn
@@ -89,14 +90,18 @@ export function timeoutPromise(callTimeout: number) {
   );
 }
 
-export async function verifyContract(address: string, hre: HardhatRuntimeEnvironment, args?: unknown): Promise<void> {
+export async function verifyContract(
+  address: string,
+  hre: HardhatRuntimeEnvironment,
+  args?: unknown,
+): Promise<void> {
   let count = 0;
   const maxTries = 5;
 
   while (count < maxTries) {
     try {
       console.log(`=>Attempt #${count + 1} to verifying contract at ${address}...`);
-      await hre.run("verify:verify", {
+      await hre.run('verify:verify', {
         address: address,
         constructorArguments: args,
       });
@@ -105,9 +110,9 @@ export async function verifyContract(address: string, hre: HardhatRuntimeEnviron
       console.log(error);
       const errorObj = error as object;
       if (
-        "message" in errorObj &&
-        typeof errorObj.message === "string" &&
-        errorObj.message.includes("Already Verified")
+        'message' in errorObj &&
+        typeof errorObj.message === 'string' &&
+        errorObj.message.includes('Already Verified')
       ) {
         break;
       }
@@ -118,8 +123,8 @@ export async function verifyContract(address: string, hre: HardhatRuntimeEnviron
   }
 
   if (count === maxTries) {
-    console.log("Failed to verify contract address %s", address);
-    throw new Error("Verification failed");
+    console.log('Failed to verify contract address %s', address);
+    throw new Error('Verification failed');
   }
 }
 
@@ -160,9 +165,13 @@ export async function waitTx(
 
       if (functionName && receipt) {
         const gas = receipt.gasUsed;
-        const price = toNumber(receipt.gasPrice ? gas * receipt.gasPrice : receipt.cumulativeGasUsed);
+        const price = toNumber(
+          receipt.gasPrice ? gas * receipt.gasPrice : receipt.cumulativeGasUsed,
+        );
         console.log(
-          `TX: ${functionName} time: ${time.toFixed(1)} sec, gas: ${gas}, fee: ${price.toFixed(FRACTION_DIGITS)}`,
+          `TX: ${functionName} time: ${time.toFixed(1)} sec, gas: ${gas}, fee: ${price.toFixed(
+            FRACTION_DIGITS,
+          )}`,
         );
       }
       return receipt;

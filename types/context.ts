@@ -1,7 +1,7 @@
-import { Signer } from "ethers";
-import { SQRClaim } from "~typechain-types/contracts/SQRClaim";
-import { SQRToken } from "~typechain-types/contracts/SQRToken";
-import { SQRClaim__factory } from "~typechain-types/factories/contracts/SQRClaim__factory";
+import { Signer } from 'ethers';
+import { SQRClaim } from '~typechain-types/contracts/SQRClaim';
+import { SQRToken } from '~typechain-types/contracts/SQRToken';
+import { SQRClaim__factory } from '~typechain-types/factories/contracts/SQRClaim__factory';
 
 export interface Users {
   owner: Signer;

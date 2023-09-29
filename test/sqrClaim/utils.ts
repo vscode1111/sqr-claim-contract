@@ -1,8 +1,8 @@
-import { expect } from "chai";
-import { Signer } from "ethers";
-import { signMessage } from "~common";
-import { seedData } from "~seeds";
-import { ContextBase } from "~types";
+import { expect } from 'chai';
+import { Signer } from 'ethers';
+import { signMessage } from '~common';
+import { seedData } from '~seeds';
+import { ContextBase } from '~types';
 
 export async function getTokenBalance(that: ContextBase, address: string) {
   return that.ownerSQRToken.balanceOf(address);
@@ -37,7 +37,7 @@ export async function signMessageForClaim(
   return signMessage(
     signer,
     //account, amount, transactionId, timestampLimit
-    ["address", "uint256", "string", "uint32"],
+    ['address', 'uint256', 'string', 'uint32'],
     [account, amount, transactionId, timestampLimit],
   );
 }

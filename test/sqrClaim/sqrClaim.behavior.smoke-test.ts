@@ -1,11 +1,10 @@
-import { expect } from "chai";
-import { waitTx } from "~common";
-import { seedData } from "~seeds";
-import { ContextBase } from "~types";
-import { findEvent } from "~utils";
-
-import { ClaimEventArgs } from "./types";
-import { checkTotalBalance, signMessageForClaim } from "./utils";
+import { expect } from 'chai';
+import { waitTx } from '~common';
+import { seedData } from '~seeds';
+import { ContextBase } from '~types';
+import { findEvent } from '~utils';
+import { ClaimEventArgs } from './types';
+import { checkTotalBalance, signMessageForClaim } from './utils';
 
 export async function smokeTest(that: ContextBase) {
   await owner2SendsTokens(that);
@@ -14,10 +13,10 @@ export async function smokeTest(that: ContextBase) {
 }
 
 const labels = {
-  smokeTest: "Smoke test",
-  owner2SendsTokens: "--Owner2 send tokens to contract if required",
-  ownerClaimsToUser1: "--Owner claims tokens to user1",
-  user1ClaimsSig: "--User1 claims tokens using signature",
+  smokeTest: 'Smoke test',
+  owner2SendsTokens: '--Owner2 send tokens to contract if required',
+  ownerClaimsToUser1: '--Owner claims tokens to user1',
+  user1ClaimsSig: '--User1 claims tokens using signature',
 };
 
 export async function owner2SendsTokens(that: ContextBase) {
@@ -29,7 +28,7 @@ export async function owner2SendsTokens(that: ContextBase) {
   if (balance < seedData.userInitBalance) {
     const diff = seedData.userInitBalance - balance;
     console.log(`diff: ${diff}`);
-    await waitTx(that.owner2SQRToken.transfer(that.sqrClaimAddress, diff), "transfer");
+    await waitTx(that.owner2SQRToken.transfer(that.sqrClaimAddress, diff), 'transfer');
   }
 }
 
@@ -37,8 +36,13 @@ export async function ownerClaimsToUser1(that: ContextBase) {
   console.log(labels.ownerClaimsToUser1);
 
   const receipt = await waitTx(
-    that.ownerSQRClaim.claim(that.user1Address, seedData.amount1, seedData.transationId0, seedData.nowPlus1m),
-    "claim",
+    that.ownerSQRClaim.claim(
+      that.user1Address,
+      seedData.amount1,
+      seedData.transationId0,
+      seedData.nowPlus1m,
+    ),
+    'claim',
   );
   const eventLog = findEvent<ClaimEventArgs>(receipt);
   expect(eventLog).not.undefined;
@@ -71,7 +75,7 @@ export async function user1ClaimsSig(that: ContextBase) {
       seedData.nowPlus1m,
       signature,
     ),
-    "claimSig",
+    'claimSig',
   );
   const eventLog = findEvent<ClaimEventArgs>(receipt);
   expect(eventLog).not.undefined;
@@ -85,7 +89,7 @@ export async function user1ClaimsSig(that: ContextBase) {
 }
 
 export function shouldBehaveCorrectSmokeTest(): void {
-  describe("smoke test", () => {
+  describe('smoke test', () => {
     it(labels.smokeTest, async function () {
       await smokeTest(this);
     });

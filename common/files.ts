@@ -1,6 +1,6 @@
-import { existsSync, mkdirSync, readdirSync, rmSync, statSync } from "fs";
-import { readdir, rm } from "fs/promises";
-import path from "path";
+import { existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'fs';
+import { readdir, rm } from 'fs/promises';
+import path from 'path';
 
 export function eraseDirectorySync(directoryPath: string, pattern: RegExp) {
   let count = 0;

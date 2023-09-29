@@ -1,5 +1,5 @@
-import { BigNumberish, Signer } from "ethers";
-import { signMessage } from "~common";
+import { BigNumberish, Signer } from 'ethers';
+import { signMessage } from '~common';
 
 export async function signMessageForWithdraw(
   signer: Signer,
@@ -7,5 +7,5 @@ export async function signMessageForWithdraw(
   amount: BigNumberish,
   transactionId: string,
 ) {
-  return signMessage(signer, ["address", "uint256", "string"], [toAddress, amount, transactionId]);
+  return signMessage(signer, ['address', 'uint256', 'string'], [toAddress, amount, transactionId]);
 }

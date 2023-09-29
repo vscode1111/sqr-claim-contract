@@ -24,7 +24,7 @@
     "postinstall": "husky install && set DOTENV_CONFIG_PATH=./.env.example yarn typechain",
     "postpublish": "pinst --enable",
     "prepublishOnly": "pinst --disable",
-    "format": "prettier --config ./.prettierrc.yml --write \"**/*.{js,json,md,sol,ts,yml}\"",
+    "format": "prettier --config ./.prettierrc --write \"**/*.{js,json,md,sol,ts,yml}\"",
     "format:check": "prettier --check --config ./.prettierrc.yml \"**/*.{js,json,md,sol,ts,yml}\"",
     "test": "hardhat test --network hardhat",
     "unit-test": "mocha -r ts-node/register 'common/**/*spec.ts'",

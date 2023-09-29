@@ -1,11 +1,10 @@
-import { upgrades } from "hardhat";
-import { DeployFunction } from "hardhat-deploy/types";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { callWithTimerHre, verifyContract } from "~common";
-import { SQR_CLAIM_NAME } from "~constants";
-import { getAddressesFromHre, getSQRClaimContext, getUsers } from "~utils";
-
-import { verifyRequired } from "./deployData";
+import { upgrades } from 'hardhat';
+import { DeployFunction } from 'hardhat-deploy/types';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { callWithTimerHre, verifyContract } from '~common';
+import { SQR_CLAIM_NAME } from '~constants';
+import { getAddressesFromHre, getSQRClaimContext, getUsers } from '~utils';
+import { verifyRequired } from './deployData';
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<void> => {
   await callWithTimerHre(async () => {
