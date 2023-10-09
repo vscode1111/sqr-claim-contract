@@ -148,6 +148,15 @@ export function shouldBehaveCorrectControl(): void {
         expect(transationIdHash0).eq(seedData.transationIdHash0);
         expect(timestamp).closeTo(seedData.now, seedData.timeDelta);
 
+        expect(await this.ownerSQRClaim.getTransactionIdHash(seedData.transationId0)).eq(
+          seedData.transationIdHash0,
+        );
+
+        const transactionItem = await this.ownerSQRClaim.getTransactionItem(seedData.transationId0);
+        expect(transactionItem[0]).eq(seedData.transationIdHash0);
+        expect(transactionItem[1][0]).eq(this.user1Address);
+        expect(transactionItem[1][1]).eq(seedData.amount1);
+
         await checkTotalBalance(this);
       });
 

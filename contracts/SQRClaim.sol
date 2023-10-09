@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
-import '@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol';
-import '@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol';
-import '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
-import './interfaces/IPermitToken.sol';
-import './interfaces/IBalance.sol';
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "./interfaces/IPermitToken.sol";
+import "./interfaces/IBalance.sol";
 
 contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgradeable, IBalance {
   using ECDSA for bytes32;
@@ -60,12 +60,12 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     uint256 amount,
     string memory transactionId
   ) private nonReentrant {
-    require(sqrToken.balanceOf(address(this)) >= amount, 'Contract must have sufficient funds');
+    require(sqrToken.balanceOf(address(this)) >= amount, "Contract must have sufficient funds");
 
     (bytes32 transactionIdHash, TransactionItem memory transactionItem) = getTransactionItem(
       transactionId
     );
-    require(transactionItem.account == address(0), 'This transactionId was used before');
+    require(transactionItem.account == address(0), "This transactionId was used before");
 
     _transactionIds[transactionIdHash] = TransactionItem(account, amount);
     sqrToken.transfer(account, amount);
@@ -79,7 +79,7 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     string memory transactionId,
     uint32 timestampLimit
   ) external payable onlyOwner {
-    require(block.timestamp <= timestampLimit, 'Timeout blocker');
+    require(block.timestamp <= timestampLimit, "Timeout blocker");
     _claim(account, amount, transactionId);
   }
 
@@ -104,10 +104,10 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     uint32 timestampLimit,
     bytes memory signature
   ) external {
-    require(block.timestamp <= timestampLimit, 'Timeout blocker');
+    require(block.timestamp <= timestampLimit, "Timeout blocker");
     require(
       verifySignature(account, amount, transactionId, timestampLimit, signature),
-      'Invalid signature'
+      "Invalid signature"
     );
     _claim(account, amount, transactionId);
   }

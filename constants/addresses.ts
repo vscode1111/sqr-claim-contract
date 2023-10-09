@@ -9,7 +9,8 @@ export enum CONTRACT_LIST {
 
 export const TOKENS: Record<CONTRACT_LIST, DeployNetworks> = {
   SQR_CLAIM: {
-    bnb: '0x06Cd8543cD076807d4F2B3bF67069015206FA9e9', //My
+    // bnb: '0x06Cd8543cD076807d4F2B3bF67069015206FA9e9', //My
+    bnb: '0x1635A6Bc428F4912c32088313A279605198EA29d', //My2
     polygon: '',
   },
 };

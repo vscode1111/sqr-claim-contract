@@ -19,6 +19,7 @@
       "files": "*.sol",
       "options": {
         "useTabs": false,
+        "singleQuote": false,
         "bracketSpacing": false
       }
     },

@@ -32,7 +32,6 @@ export interface SQRClaimContext {
   user1SQRClaim: SQRClaim;
   user2SQRClaim: SQRClaim;
   user3SQRClaim: SQRClaim;
-  owner2SQRClaim: SQRClaim;
 }
 
 export type ContextBase = Users & SQRTokenContext & SQRClaimContext;

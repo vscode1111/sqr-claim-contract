@@ -62,17 +62,17 @@ export async function getSQRTokenContext(
 ): Promise<SQRTokenContext> {
   const { owner, user1, user2, user3, owner2, owner2Address } = users;
 
-  const testSQRTokenFactory = (await ethers.getContractFactory(
+  const sqrTokenFactory = (await ethers.getContractFactory(
     SQR_TOKEN_NAME,
   )) as any as SQRToken__factory;
 
   let ownerSQRToken: SQRToken;
 
   if (typeof deployData === 'string') {
-    ownerSQRToken = testSQRTokenFactory.connect(owner).attach(deployData) as SQRToken;
+    ownerSQRToken = sqrTokenFactory.connect(owner).attach(deployData) as SQRToken;
   } else {
     const newOnwer = deployData?.newOnwer ?? owner2Address;
-    ownerSQRToken = await testSQRTokenFactory.connect(owner).deploy(...getTokenArgs(newOnwer));
+    ownerSQRToken = await sqrTokenFactory.connect(owner).deploy(...getTokenArgs(newOnwer));
   }
 
   const sqrTokenAddress = await ownerSQRToken.getAddress();
@@ -96,7 +96,7 @@ export async function getSQRClaimContext(
   users: Users,
   deployData?: string | ContractConfig,
 ): Promise<SQRClaimContext> {
-  const { owner, user1, user2, user3, owner2 } = users;
+  const { owner, user1, user2, user3 } = users;
 
   const sqrClaimFactory = (await ethers.getContractFactory(
     SQR_CLAIM_NAME,
@@ -119,7 +119,6 @@ export async function getSQRClaimContext(
   const user1SQRClaim = ownerSQRClaim.connect(user1);
   const user2SQRClaim = ownerSQRClaim.connect(user2);
   const user3SQRClaim = ownerSQRClaim.connect(user3);
-  const owner2SQRClaim = ownerSQRClaim.connect(owner2);
 
   return {
     sqrClaimFactory,
@@ -128,7 +127,6 @@ export async function getSQRClaimContext(
     user1SQRClaim,
     user2SQRClaim,
     user3SQRClaim,
-    owner2SQRClaim,
   };
 }
 
