@@ -11,7 +11,8 @@ export const TOKENS: Record<CONTRACT_LIST, DeployNetworks> = {
   SQR_CLAIM: {
     // bnb: '0x06Cd8543cD076807d4F2B3bF67069015206FA9e9', //My
     // bnb: '0x1635A6Bc428F4912c32088313A279605198EA29d', //My2
-    bnb: '0xe25002544E53a63f2b3003Ec14AA4a4a18472207', //My3
+    // bnb: '0xe25002544E53a63f2b3003Ec14AA4a4a18472207', //My3
+    bnb: '0x729B852e45D838280b22E2aA7cd1896da1bae5Df', //My3
     polygon: '',
   },
 };

@@ -23,7 +23,8 @@ export const prodContractConfig: Partial<ContractConfig> = {
 };
 
 export const testContractConfig: Partial<ContractConfig> = {
-  sqrToken: '0xCD56577757277861034560D5f166aEB68C4844FB', //My - testName12
+  // sqrToken: '0xCD56577757277861034560D5f166aEB68C4844FB', //My - testName12
+  sqrToken: '0x4072b57e9B3dA8eEB9F8998b69C868E9a1698E54', //tSQR
 };
 
 const extContractConfig = isTest ? testContractConfig : prodContractConfig;
@@ -56,9 +57,9 @@ export function getTokenArgs(newOnwer: string): DeployTokenArgs {
 }
 
 const priceDiv = BigInt(1);
-const userInitBalance = toWei(10_000, sqrDecimals);
-const amount1 = toWei(78.123, sqrDecimals) / priceDiv;
-const extraAmount1 = toWei(2500.32, sqrDecimals) / priceDiv;
+const userInitBalance = toWei(100, sqrDecimals);
+const amount1 = toWei(1.123, sqrDecimals) / priceDiv;
+const extraAmount1 = toWei(25.32, sqrDecimals) / priceDiv;
 const transationId0 = uuidv4();
 const transationId1 = uuidv4();
 
