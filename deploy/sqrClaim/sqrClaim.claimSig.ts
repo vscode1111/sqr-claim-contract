@@ -16,8 +16,6 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
 
     const transationId = seedData.transationId0;
     const timestampLimit = seedData.nowPlus1m;
-    // const transationId = '62813e9b-bde7-40bf-adde-4cf3c3d76002';
-    // const timestampLimit = 1696252209;
 
     const signature = await signMessageForClaim(
       owner,
