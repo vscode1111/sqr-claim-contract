@@ -23,6 +23,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
         address,
         balance,
       };
+      4;
     }),
   );
 

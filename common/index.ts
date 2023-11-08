@@ -9,3 +9,4 @@ export * from './log';
 export * from './misc';
 export * from './test';
 export * from './types';
+export * from './web3';

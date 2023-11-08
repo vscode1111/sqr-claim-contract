@@ -58,7 +58,7 @@ export function getTokenArgs(newOnwer: string): DeployTokenArgs {
 
 const priceDiv = BigInt(1);
 const userInitBalance = toWei(100, sqrDecimals);
-const amount1 = toWei(1.123, sqrDecimals) / priceDiv;
+const amount1 = toWei(0.123, sqrDecimals) / priceDiv;
 const extraAmount1 = toWei(25.32, sqrDecimals) / priceDiv;
 const transationId0 = uuidv4();
 const transationId1 = uuidv4();
@@ -73,7 +73,6 @@ export const seedData = {
   extraAmount2: extraAmount1 / BigInt(2),
   now: toUnixTime(),
   nowPlus1m: toUnixTime(dayjs().add(1, 'minute').toDate()),
-  // nowPlus1m: toUnixTime(dayjs().add(0, 'seconds').toDate()),
   timeDelta: 300,
   transationId0,
   transationId1,

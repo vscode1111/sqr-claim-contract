@@ -1,6 +1,6 @@
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { callWithTimerHre, waitTx } from '~common';
+import { callWithTimerHre, getTxOverrides, waitTx } from '~common';
 import { SQR_CLAIM_NAME } from '~constants';
 import { contractConfig, seedData } from '~seeds';
 import { signMessageForClaim } from '~test';
@@ -42,6 +42,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
         params.transationId,
         params.timestampLimit,
         params.signature,
+        await getTxOverrides(),
       ),
       'claim-sig',
     );
