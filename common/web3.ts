@@ -8,11 +8,6 @@ export async function getTxOverrides(gasPriceFactor = 1, gasLimit?: number): Pro
   const strGasPrice = ((Number(feeData.gasPrice) ?? 1) * gasPriceFactor).toFixed();
   const gasPrice = Number(strGasPrice);
 
-  console.log(222, {
-    gasPrice,
-    gasLimit,
-  });
-
   return {
     gasPrice,
     gasLimit,
