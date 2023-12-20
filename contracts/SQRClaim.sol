@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "./interfaces/IPermitToken.sol";
 import "./interfaces/IBalance.sol";
 
+// import "hardhat/console.sol";
+
 contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgradeable, IBalance {
   using ECDSA for bytes32;
 
@@ -16,11 +18,13 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     _disableInitializers();
   }
 
-  function initialize(address _sqrToken) public initializer {
+  function initialize(address _newOwner, address _sqrToken, uint32 _claimDelay) public initializer {
     __Ownable_init();
     __UUPSUpgradeable_init();
 
+    _transferOwnership(_newOwner);
     sqrToken = IPermitToken(_sqrToken);
+    claimDelay = _claimDelay;
   }
 
   function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
@@ -28,8 +32,14 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
   //Variables, structs, modifiers, events------------------------
 
   IPermitToken public sqrToken;
-
+  uint32 public claimDelay;
+  mapping(address => FundItem) private _balances;
   mapping(bytes32 => TransactionItem) private _transactionIds;
+
+  struct FundItem {
+    uint256 amount;
+    uint32 permitDate;
+  }
 
   struct TransactionItem {
     address account;
@@ -40,12 +50,20 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
 
   //Functions-------------------------------------------
 
+  function changeClaimDelay(uint32 _claimDelay) external onlyOwner {
+    claimDelay = _claimDelay;
+  }
+
   function getBalance() public view returns (uint256) {
     return sqrToken.balanceOf(address(this));
   }
 
   function getTransactionIdHash(string memory transactionId) public pure returns (bytes32) {
     return keccak256(abi.encodePacked(transactionId));
+  }
+
+  function fetchFundItem(address account) external view returns (FundItem memory) {
+    return _balances[account];
   }
 
   function getTransactionItem(
@@ -58,14 +76,26 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
   function _claim(
     address account,
     uint256 amount,
-    string memory transactionId
+    string memory transactionId,
+    uint32 timestampLimit
   ) private nonReentrant {
+    require(amount > 0, "Amount must be greater than zero");
+    require(block.timestamp <= timestampLimit, "Timeout blocker for timestampLimit");
     require(sqrToken.balanceOf(address(this)) >= amount, "Contract must have sufficient funds");
 
     (bytes32 transactionIdHash, TransactionItem memory transactionItem) = getTransactionItem(
       transactionId
     );
     require(transactionItem.account == address(0), "This transactionId was used before");
+
+    FundItem storage fund = _balances[account];
+    require(
+      fund.permitDate == 0 || fund.permitDate <= block.timestamp,
+      "Timeout blocker for account"
+    );
+
+    fund.amount += amount;
+    fund.permitDate = uint32(block.timestamp + claimDelay);
 
     _transactionIds[transactionIdHash] = TransactionItem(account, amount);
     sqrToken.transfer(account, amount);
@@ -79,8 +109,7 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     string memory transactionId,
     uint32 timestampLimit
   ) external payable onlyOwner {
-    require(block.timestamp <= timestampLimit, "Timeout blocker");
-    _claim(account, amount, transactionId);
+    _claim(account, amount, transactionId, timestampLimit);
   }
 
   function verifySignature(
@@ -104,11 +133,10 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     uint32 timestampLimit,
     bytes memory signature
   ) external {
-    require(block.timestamp <= timestampLimit, "Timeout blocker");
     require(
       verifySignature(account, amount, transactionId, timestampLimit, signature),
       "Invalid signature"
     );
-    _claim(account, amount, transactionId);
+    _claim(account, amount, transactionId, timestampLimit);
   }
 }

@@ -2,7 +2,7 @@ import { arrayify } from '@ethersproject/bytes';
 import { Signer, keccak256, solidityPackedKeccak256, toUtf8Bytes } from 'ethers';
 import { MerkleTree } from 'merkletreejs';
 
-export function keccak256FromStr(data: string) {
+export function keccak256FromStr(data: string): string {
   return keccak256(toUtf8Bytes(data));
 }
 

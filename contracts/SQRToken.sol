@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
-import '@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol';
-import '@openzeppelin/contracts/access/Ownable.sol';
-import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
-import '@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol';
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 
 contract SQRToken is ERC20, ERC20Burnable, ERC20Permit, Ownable, ReentrancyGuard {
   uint8 _decimals;
@@ -24,9 +24,5 @@ contract SQRToken is ERC20, ERC20Burnable, ERC20Permit, Ownable, ReentrancyGuard
 
   function decimals() public view override returns (uint8) {
     return _decimals;
-  }
-
-  function burn(address to, uint256 amount) public onlyOwner {
-    _burn(to, amount);
   }
 }

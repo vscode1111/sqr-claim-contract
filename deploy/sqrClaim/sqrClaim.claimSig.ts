@@ -3,8 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { callWithTimerHre, getTxOverrides, waitTx } from '~common';
 import { SQR_CLAIM_NAME } from '~constants';
 import { contractConfig, seedData } from '~seeds';
-import { signMessageForClaim } from '~test';
-import { getAddressesFromHre, getContext } from '~utils';
+import { getAddressesFromHre, getContext, signMessageForClaim } from '~utils';
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<void> => {
   await callWithTimerHre(async () => {
@@ -17,21 +16,21 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
     const transationId = seedData.transationId0;
     const timestampLimit = seedData.nowPlus1m;
 
-    const signature = await signMessageForClaim(
+    const params = {
+      account: user1Address,
+      amount: seedData.amount1,
+      transationId,
+      timestampLimit,
+      signature: '',
+    };
+
+    params.signature = await signMessageForClaim(
       owner,
       user1Address,
       seedData.amount1,
       transationId,
       timestampLimit,
     );
-
-    const params = {
-      account: user1Address,
-      amount: seedData.amount1,
-      transationId,
-      timestampLimit,
-      signature,
-    };
 
     console.table(params);
 

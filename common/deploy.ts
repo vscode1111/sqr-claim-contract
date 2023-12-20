@@ -6,8 +6,7 @@ import { DeployNetworks } from '~types';
 import { DiffArray } from './DiffArray';
 import { toNumber } from './converts';
 
-export const DECIMAL_FACTOR = 1e18;
-export const FRACTION_DIGITS = 3;
+export const FRACTION_DIGITS = 5;
 
 export async function getBalances() {
   const users = await ethers.getSigners();

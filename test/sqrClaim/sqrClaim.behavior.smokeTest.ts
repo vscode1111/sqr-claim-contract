@@ -2,14 +2,13 @@ import { expect } from 'chai';
 import { waitTx } from '~common';
 import { seedData } from '~seeds';
 import { ContextBase } from '~types';
-import { findEvent } from '~utils';
+import { findEvent, signMessageForClaim } from '~utils';
 import { ClaimEventArgs } from './types';
-import { signMessageForClaim } from './utils';
 
 export async function smokeTest(that: ContextBase) {
   await owner2SendsTokens(that);
-  await ownerClaimsToUser1(that);
-  await user1ClaimsSig(that);
+  await owner2ClaimsToUser1(that);
+  await user2ClaimsSig(that);
 }
 
 const labels = {
@@ -22,7 +21,7 @@ const labels = {
 export async function owner2SendsTokens(that: ContextBase) {
   console.log(labels.owner2SendsTokens);
 
-  const balance = await that.ownerSQRClaim.getBalance();
+  const balance = await that.owner2SQRClaim.getBalance();
   console.log(`balance: ${balance}`);
 
   if (balance < seedData.userInitBalance) {
@@ -32,11 +31,11 @@ export async function owner2SendsTokens(that: ContextBase) {
   }
 }
 
-export async function ownerClaimsToUser1(that: ContextBase) {
+export async function owner2ClaimsToUser1(that: ContextBase) {
   console.log(labels.ownerClaimsToUser1);
 
   const receipt = await waitTx(
-    that.ownerSQRClaim.claim(
+    that.owner2SQRClaim.claim(
       that.user1Address,
       seedData.amount1,
       seedData.transationId0,
@@ -55,13 +54,13 @@ export async function ownerClaimsToUser1(that: ContextBase) {
   //await checkTotalBalance(that);
 }
 
-export async function user1ClaimsSig(that: ContextBase) {
+export async function user2ClaimsSig(that: ContextBase) {
   console.log(labels.user1ClaimsSig);
 
   const signature = await signMessageForClaim(
-    that.owner,
-    that.user1Address,
-    seedData.amount1,
+    that.owner2,
+    that.user2Address,
+    seedData.amount2,
     seedData.transationId1,
     seedData.nowPlus1m,
   );
@@ -69,8 +68,8 @@ export async function user1ClaimsSig(that: ContextBase) {
 
   const receipt = await waitTx(
     that.user1SQRClaim.claimSig(
-      that.user1Address,
-      seedData.amount1,
+      that.user2Address,
+      seedData.amount2,
       seedData.transationId1,
       seedData.nowPlus1m,
       signature,
@@ -80,12 +79,10 @@ export async function user1ClaimsSig(that: ContextBase) {
   const eventLog = findEvent<ClaimEventArgs>(receipt);
   expect(eventLog).not.undefined;
   const [account, amount, transationIdHash0, timestamp] = eventLog?.args;
-  expect(account).eq(that.user1Address);
-  expect(amount).eq(seedData.amount1);
+  expect(account).eq(that.user2Address);
+  expect(amount).eq(seedData.amount2);
   expect(transationIdHash0).eq(seedData.transationIdHash1);
   expect(timestamp).closeTo(seedData.now, seedData.timeDelta);
-
-  //await checkTotalBalance(that);
 }
 
 export function shouldBehaveCorrectSmokeTest(): void {

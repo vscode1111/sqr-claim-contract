@@ -28,10 +28,11 @@ export interface SQRTokenContext {
 export interface SQRClaimContext {
   sqrClaimFactory: SQRClaim__factory;
   sqrClaimAddress: string;
-  ownerSQRClaim: SQRClaim;
   user1SQRClaim: SQRClaim;
   user2SQRClaim: SQRClaim;
   user3SQRClaim: SQRClaim;
+  ownerSQRClaim: SQRClaim;
+  owner2SQRClaim: SQRClaim;
 }
 
 export type ContextBase = Users & SQRTokenContext & SQRClaimContext;

@@ -96,7 +96,7 @@ export async function getSQRClaimContext(
   users: Users,
   deployData?: string | ContractConfig,
 ): Promise<SQRClaimContext> {
-  const { owner, user1, user2, user3 } = users;
+  const { owner, user1, user2, user3, owner2 } = users;
 
   const sqrClaimFactory = (await ethers.getContractFactory(
     SQR_CLAIM_NAME,
@@ -109,7 +109,11 @@ export async function getSQRClaimContext(
   } else {
     ownerSQRClaim = (await upgrades.deployProxy(
       sqrClaimFactory,
-      getContractArgs(deployData?.sqrToken ?? ''),
+      getContractArgs(
+        deployData?.newOwner ?? '',
+        deployData?.sqrToken ?? '',
+        deployData?.claimDelay ?? 0,
+      ),
       OPTIONS,
     )) as unknown as SQRClaim;
   }
@@ -119,14 +123,16 @@ export async function getSQRClaimContext(
   const user1SQRClaim = ownerSQRClaim.connect(user1);
   const user2SQRClaim = ownerSQRClaim.connect(user2);
   const user3SQRClaim = ownerSQRClaim.connect(user3);
+  const owner2SQRClaim = ownerSQRClaim.connect(owner2);
 
   return {
     sqrClaimFactory,
     sqrClaimAddress,
-    ownerSQRClaim,
     user1SQRClaim,
     user2SQRClaim,
     user3SQRClaim,
+    ownerSQRClaim,
+    owner2SQRClaim,
   };
 }
 

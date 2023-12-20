@@ -5,7 +5,7 @@ import { getTokenBalance } from './utils';
 export function shouldBehaveCorrectFetching(): void {
   describe('fetching', () => {
     it('should be correct init values', async function () {
-      expect(await this.ownerSQRClaim.owner()).eq(this.ownerAddress);
+      expect(await this.ownerSQRClaim.owner()).eq(this.owner2Address);
       expect(await this.ownerSQRClaim.sqrToken()).eq(this.sqrTokenAddress);
     });
 

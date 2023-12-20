@@ -1,8 +1,10 @@
 export interface ContractConfig {
+  newOwner: string;
   sqrToken: string;
+  claimDelay: number;
 }
 
-export type DeployContractArgs = [sqrToken: string];
+export type DeployContractArgs = [newOwner: string, sqrToken: string, claimDelay: number];
 
 export interface TokenConfig {
   name: string;

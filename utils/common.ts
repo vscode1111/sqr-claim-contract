@@ -1,11 +1,17 @@
-import { BigNumberish, Signer } from 'ethers';
+import { Signer } from 'ethers';
 import { signMessage } from '~common';
 
-export async function signMessageForWithdraw(
+export async function signMessageForClaim(
   signer: Signer,
-  toAddress: string,
-  amount: BigNumberish,
+  account: string,
+  amount: bigint,
   transactionId: string,
+  timestampLimit: number,
 ) {
-  return signMessage(signer, ['address', 'uint256', 'string'], [toAddress, amount, transactionId]);
+  return signMessage(
+    signer,
+    //account, amount, transactionId, timestampLimit
+    ['address', 'uint256', 'string', 'uint32'],
+    [account, amount, transactionId, timestampLimit],
+  );
 }

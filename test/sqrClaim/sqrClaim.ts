@@ -1,9 +1,10 @@
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { SQR_CLAIM_NAME } from '~constants';
 import { ContextBase } from '~types';
+import { shouldBehaveCorrectControl } from './sqrClaim.behavior.control';
 import { shouldBehaveCorrectFetching } from './sqrClaim.behavior.fetching';
-import { shouldBehaveCorrectControl } from './sqrClaim.behavior.funding';
-import { shouldBehaveCorrectSmokeTest } from './sqrClaim.behavior.smoke-test';
+import { shouldBehaveCorrectFunding } from './sqrClaim.behavior.funding';
+import { shouldBehaveCorrectSmokeTest } from './sqrClaim.behavior.smokeTest';
 import { deploySQRClaimContractFixture } from './sqrClaim.fixture';
 
 describe(SQR_CLAIM_NAME, function () {
@@ -18,7 +19,8 @@ describe(SQR_CLAIM_NAME, function () {
     }
   });
 
-  shouldBehaveCorrectFetching();
   shouldBehaveCorrectControl();
+  shouldBehaveCorrectFetching();
+  shouldBehaveCorrectFunding();
   shouldBehaveCorrectSmokeTest();
 });

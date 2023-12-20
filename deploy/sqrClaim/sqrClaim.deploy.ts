@@ -18,7 +18,9 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
 
     console.log(`Deploying...`);
     const { sqrClaimAddress } = await getSQRClaimContext(await getUsers(), {
+      newOwner: contractConfig.newOwner,
       sqrToken: contractConfig.sqrToken,
+      claimDelay: contractConfig.claimDelay,
     });
     console.log(`${SQR_CLAIM_NAME} deployed to ${sqrClaimAddress}`);
     if (verifyRequired) {

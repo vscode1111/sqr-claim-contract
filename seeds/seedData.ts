@@ -6,7 +6,7 @@ import { defaultNetwork } from '../hardhat.config';
 import { ContractConfig, DeployContractArgs, DeployTokenArgs, TokenConfig } from './types';
 
 const chainDecimals: Record<DeployNetworkKey, number> = {
-  bnb: 8,
+  bsc: 8,
   polygon: 8,
 };
 
@@ -19,23 +19,30 @@ if (!isTest) {
 }
 
 export const prodContractConfig: Partial<ContractConfig> = {
+  newOwner: '0x81aFFCB2FaCEcCaE727Fa4b1B2ef534a1Da67791',
   sqrToken: '',
 };
 
 export const testContractConfig: Partial<ContractConfig> = {
-  // sqrToken: '0xCD56577757277861034560D5f166aEB68C4844FB', //My - testName12
+  newOwner: '0x1D5eeCbD950C22Ec2B5813Ab1D65ED5fFD83F32B',
   sqrToken: '0x4072b57e9B3dA8eEB9F8998b69C868E9a1698E54', //tSQR
 };
 
 const extContractConfig = isTest ? testContractConfig : prodContractConfig;
 
 export const contractConfig: ContractConfig = {
-  sqrToken: '',
+  newOwner: 'empty',
+  sqrToken: 'empty',
+  claimDelay: 1 * 24 * 3600,
   ...extContractConfig,
 };
 
-export function getContractArgs(sqrToken: string): DeployContractArgs {
-  return [sqrToken];
+export function getContractArgs(
+  newOwner: string,
+  sqrToken: string,
+  claimDelay: number,
+): DeployContractArgs {
+  return [newOwner, sqrToken, claimDelay];
 }
 
 export const tokenConfig: TokenConfig = {
@@ -73,9 +80,13 @@ export const seedData = {
   extraAmount2: extraAmount1 / BigInt(2),
   now: toUnixTime(),
   nowPlus1m: toUnixTime(dayjs().add(1, 'minute').toDate()),
+  nowPlus1d: toUnixTime(dayjs().add(1, 'day').toDate()),
+  nowPlus1d1m: toUnixTime(dayjs().add(1, 'day').add(1, 'minute').toDate()),
+  nowPlus1d2m: toUnixTime(dayjs().add(1, 'day').add(2, 'minute').toDate()),
   timeDelta: 300,
   transationId0,
   transationId1,
   transationIdHash0: keccak256FromStr(transationId0),
   transationIdHash1: keccak256FromStr(transationId1),
+  claimDelay: 2 * 24 * 3600,
 };

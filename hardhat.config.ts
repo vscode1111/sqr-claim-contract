@@ -42,14 +42,14 @@ function getChainConfig(
   };
 }
 
-export const defaultNetwork: keyof DeployNetworks = 'bnb';
+export const defaultNetwork: keyof DeployNetworks = 'bsc';
 // export const defaultNetwork: keyof DeployNetworks = "polygon";
 
 const config: HardhatUserConfig = {
   defaultNetwork,
   etherscan: {
     apiKey: {
-      bsc: getEnv('BNB_SCAN_API_KEY'),
+      bsc: getEnv('BSC_SCAN_API_KEY'),
       polygon: getEnv('POLYGON_SCAN_API_KEY'),
     },
   },
@@ -73,7 +73,7 @@ const config: HardhatUserConfig = {
       gasPrice: 0,
       accounts: getNetworkAccounts(),
     },
-    bnb: getChainConfig('bnb'),
+    bsc: getChainConfig('bsc'),
     polygon: getChainConfig('polygon'),
   },
   paths: {

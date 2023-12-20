@@ -1,5 +1,5 @@
 export interface DeployNetworks {
-  bnb: string;
+  bsc: string;
   polygon: string;
 }
 
