@@ -2,8 +2,10 @@
 
 ## Getting Started
 
+Create .env file based on .env.example
+
 ```text
-pnpm i
-pnpm clean
-pnpm test
+yarn
+yarn clean
+yarn test
 ```
