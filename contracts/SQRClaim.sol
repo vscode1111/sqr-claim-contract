@@ -19,6 +19,9 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
   }
 
   function initialize(address _newOwner, address _sqrToken, uint32 _claimDelay) public initializer {
+    require(_newOwner != address(0), "New owner address can't be the zero address");
+    require(_sqrToken != address(0), "SQR token address can't be the zero address");
+
     __Ownable_init();
     __UUPSUpgradeable_init();
 
@@ -38,7 +41,7 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
 
   struct FundItem {
     uint256 amount;
-    uint32 permitDate;
+    uint32 claimDate;
   }
 
   struct TransactionItem {
@@ -46,12 +49,15 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     uint256 amount;
   }
 
+  event ChangeClaimDelay(address indexed sender, uint32 claimDelay);
+
   event Claim(address indexed account, uint256 amount, bytes32 transactionIdHash, uint32 timestamp);
 
   //Functions-------------------------------------------
 
   function changeClaimDelay(uint32 _claimDelay) external onlyOwner {
     claimDelay = _claimDelay;
+    emit ChangeClaimDelay(_msgSender(), claimDelay);
   }
 
   function getBalance() public view returns (uint256) {
@@ -66,7 +72,7 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     return _balances[account];
   }
 
-  function getTransactionItem(
+  function fetchTransactionItem(
     string memory transactionId
   ) public view returns (bytes32, TransactionItem memory) {
     bytes32 transactionIdHash = getTransactionIdHash(transactionId);
@@ -83,19 +89,19 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     require(block.timestamp <= timestampLimit, "Timeout blocker for timestampLimit");
     require(sqrToken.balanceOf(address(this)) >= amount, "Contract must have sufficient funds");
 
-    (bytes32 transactionIdHash, TransactionItem memory transactionItem) = getTransactionItem(
+    (bytes32 transactionIdHash, TransactionItem memory transactionItem) = fetchTransactionItem(
       transactionId
     );
     require(transactionItem.account == address(0), "This transactionId was used before");
 
     FundItem storage fund = _balances[account];
     require(
-      fund.permitDate == 0 || fund.permitDate <= block.timestamp,
-      "Timeout blocker for account"
+      fund.claimDate == 0 || fund.claimDate + claimDelay <= uint32(block.timestamp),
+      "Time blocker for account"
     );
 
     fund.amount += amount;
-    fund.permitDate = uint32(block.timestamp + claimDelay);
+    fund.claimDate = uint32(block.timestamp);
 
     _transactionIds[transactionIdHash] = TransactionItem(account, amount);
     sqrToken.transfer(account, amount);

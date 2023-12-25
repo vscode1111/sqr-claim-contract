@@ -27,6 +27,7 @@ export interface SQRTokenContext {
 
 export interface SQRClaimContext {
   sqrClaimFactory: SQRClaim__factory;
+  owner2SqrClaimFactory: SQRClaim__factory;
   sqrClaimAddress: string;
   user1SQRClaim: SQRClaim;
   user2SQRClaim: SQRClaim;

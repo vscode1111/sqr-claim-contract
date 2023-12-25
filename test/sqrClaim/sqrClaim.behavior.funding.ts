@@ -202,7 +202,7 @@ export function shouldBehaveCorrectFunding(): void {
           seedData.transationIdHash0,
         );
 
-        const transactionItem = await this.owner2SQRClaim.getTransactionItem(
+        const transactionItem = await this.owner2SQRClaim.fetchTransactionItem(
           seedData.transationId0,
         );
         expect(transactionItem[0]).eq(seedData.transationIdHash0);
@@ -287,7 +287,7 @@ export function shouldBehaveCorrectFunding(): void {
 
           const user1undItem = await this.user1SQRClaim.fetchFundItem(this.user1Address);
           expect(user1undItem.amount).eq(seedData.amount1);
-          expect(user1undItem.permitDate).closeTo(seedData.nowPlus1d, seedData.timeDelta);
+          expect(user1undItem.claimDate).closeTo(seedData.now, seedData.timeDelta);
 
           await checkTotalBalance(this);
         });
@@ -329,7 +329,7 @@ export function shouldBehaveCorrectFunding(): void {
               seedData.nowPlus1m,
               signature,
             ),
-          ).revertedWith(errorMessage.timeoutBlockerForAccount);
+          ).revertedWith(errorMessage.timeBlockerForAccount);
         });
 
         describe('user1 claimed with signature and new transactionId', () => {

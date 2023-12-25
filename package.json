@@ -1,7 +1,7 @@
 {
   "name": "sqr-claim-contract",
   "description": "Solidity smart contracts for SQR claim functionality",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "scripts": {
     "clean": "shx rm -rf ./dist ./artifacts ./cache ./coverage ./typechain-types ./coverage.json && yarn typechain",
     "commit": "git-cz",
@@ -17,6 +17,7 @@
     "deploy:claim": "hardhat deploy --tags SQRClaim:claim",
     "deploy:claim-sig": "hardhat deploy --tags SQRClaim:claim-sig",
     "deploy:smoke-test": "hardhat deploy --tags SQRClaim:smoke-test",
+    "deploy:change-claim-delay": "hardhat deploy --tags SQRClaim:change-claim-delay",
     "deploy:publish-abi": "hardhat deploy --tags SQRClaim:publish-abi",
     "deploy:transfer-ownership": "hardhat deploy --tags SQRClaim:transfer-ownership",
     "lint": "yarn lint:sol && yarn lint:ts && yarn prettier:check",

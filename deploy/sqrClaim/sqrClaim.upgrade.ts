@@ -10,8 +10,8 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
   await callWithTimerHre(async () => {
     const { sqrClaimAddress } = getAddressesFromHre(hre);
     console.log(`${SQR_CLAIM_NAME} ${sqrClaimAddress} is upgrading...`);
-    const { sqrClaimFactory } = await getSQRClaimContext(await getUsers(), sqrClaimAddress);
-    await upgrades.upgradeProxy(sqrClaimAddress, sqrClaimFactory);
+    const { owner2SqrClaimFactory } = await getSQRClaimContext(await getUsers(), sqrClaimAddress);
+    await upgrades.upgradeProxy(sqrClaimAddress, owner2SqrClaimFactory);
     console.log(`${SQR_CLAIM_NAME} upgraded to ${sqrClaimAddress}`);
     if (verifyRequired) {
       await verifyContract(sqrClaimAddress, hre);

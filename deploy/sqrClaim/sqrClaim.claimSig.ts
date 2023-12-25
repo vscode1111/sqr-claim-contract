@@ -11,7 +11,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
     console.log(`${SQR_CLAIM_NAME} ${sqrClaimAddress} is claiming with signature...`);
     const sqrTokenAddress = contractConfig.sqrToken;
     const context = await getContext(sqrTokenAddress, sqrClaimAddress);
-    const { owner, user1Address, user1SQRClaim } = context;
+    const { owner2, user1Address, user1SQRClaim } = context;
 
     const transationId = seedData.transationId0;
     const timestampLimit = seedData.nowPlus1m;
@@ -25,7 +25,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
     };
 
     params.signature = await signMessageForClaim(
-      owner,
+      owner2,
       user1Address,
       seedData.amount1,
       transationId,

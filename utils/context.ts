@@ -101,6 +101,10 @@ export async function getSQRClaimContext(
   const sqrClaimFactory = (await ethers.getContractFactory(
     SQR_CLAIM_NAME,
   )) as unknown as SQRClaim__factory;
+  const owner2SqrClaimFactory = (await ethers.getContractFactory(
+    SQR_CLAIM_NAME,
+    owner2,
+  )) as unknown as SQRClaim__factory;
 
   let ownerSQRClaim: SQRClaim;
 
@@ -127,6 +131,7 @@ export async function getSQRClaimContext(
 
   return {
     sqrClaimFactory,
+    owner2SqrClaimFactory,
     sqrClaimAddress,
     user1SQRClaim,
     user2SQRClaim,
