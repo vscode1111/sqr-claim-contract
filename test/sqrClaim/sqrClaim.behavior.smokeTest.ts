@@ -38,17 +38,17 @@ export async function owner2ClaimsToUser1(that: ContextBase) {
     that.owner2SQRClaim.claim(
       that.user1Address,
       seedData.amount1,
-      seedData.transationId0,
+      seedData.transactionId0,
       seedData.nowPlus1m,
     ),
     'claim',
   );
   const eventLog = findEvent<ClaimEventArgs>(receipt);
   expect(eventLog).not.undefined;
-  const [account, amount, transationIdHash0, timestamp] = eventLog?.args;
+  const [account, amount, transactionIdHash0, timestamp] = eventLog?.args;
   expect(account).eq(that.user1Address);
   expect(amount).eq(seedData.amount1);
-  expect(transationIdHash0).eq(seedData.transationIdHash0);
+  expect(transactionIdHash0).eq(seedData.transactionIdHash0);
   expect(timestamp).closeTo(seedData.now, seedData.timeDelta);
 
   //await checkTotalBalance(that);
@@ -61,7 +61,7 @@ export async function user2ClaimsSig(that: ContextBase) {
     that.owner2,
     that.user2Address,
     seedData.amount2,
-    seedData.transationId1,
+    seedData.transactionId1,
     seedData.nowPlus1m,
   );
   console.log(`signature: ${signature}`);
@@ -70,7 +70,7 @@ export async function user2ClaimsSig(that: ContextBase) {
     that.user1SQRClaim.claimSig(
       that.user2Address,
       seedData.amount2,
-      seedData.transationId1,
+      seedData.transactionId1,
       seedData.nowPlus1m,
       signature,
     ),
@@ -78,10 +78,10 @@ export async function user2ClaimsSig(that: ContextBase) {
   );
   const eventLog = findEvent<ClaimEventArgs>(receipt);
   expect(eventLog).not.undefined;
-  const [account, amount, transationIdHash0, timestamp] = eventLog?.args;
+  const [account, amount, transactionIdHash0, timestamp] = eventLog?.args;
   expect(account).eq(that.user2Address);
   expect(amount).eq(seedData.amount2);
-  expect(transationIdHash0).eq(seedData.transationIdHash1);
+  expect(transactionIdHash0).eq(seedData.transactionIdHash1);
   expect(timestamp).closeTo(seedData.now, seedData.timeDelta);
 }
 

@@ -1,6 +1,6 @@
 export interface DeployNetworks {
   bsc: string;
-  polygon: string;
+  bscTestnet: string;
 }
 
 export interface Addresses {

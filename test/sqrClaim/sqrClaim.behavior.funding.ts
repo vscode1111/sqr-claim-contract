@@ -14,14 +14,14 @@ export function shouldBehaveCorrectFunding(): void {
         this.user1,
         this.user1Address,
         seedData.amount1,
-        seedData.transationId0,
+        seedData.transactionId0,
         seedData.nowPlus1m,
       );
       await expect(
         this.user1SQRClaim.claimSig(
           this.user1Address,
           seedData.amount1,
-          seedData.transationId0,
+          seedData.transactionId0,
           seedData.nowPlus1m,
           signature,
         ),
@@ -33,14 +33,14 @@ export function shouldBehaveCorrectFunding(): void {
         this.owner2,
         this.user1Address,
         seedData.zero,
-        seedData.transationId0,
+        seedData.transactionId0,
         seedData.nowPlus1m,
       );
       await expect(
         this.user1SQRClaim.claimSig(
           this.user1Address,
           seedData.zero,
-          seedData.transationId0,
+          seedData.transactionId0,
           seedData.nowPlus1m,
           signature,
         ),
@@ -52,7 +52,7 @@ export function shouldBehaveCorrectFunding(): void {
         this.owner2,
         this.user1Address,
         seedData.amount1,
-        seedData.transationId0,
+        seedData.transactionId0,
         seedData.nowPlus1m,
       );
 
@@ -60,7 +60,7 @@ export function shouldBehaveCorrectFunding(): void {
         this.user1SQRClaim.claimSig(
           this.user1Address,
           seedData.amount1,
-          seedData.transationId0,
+          seedData.transactionId0,
           seedData.nowPlus1m,
           signature,
         ),
@@ -72,7 +72,7 @@ export function shouldBehaveCorrectFunding(): void {
         this.owner2,
         this.user2Address,
         seedData.amount2,
-        seedData.transationId0,
+        seedData.transactionId0,
         seedData.nowPlus1m,
       );
 
@@ -80,7 +80,7 @@ export function shouldBehaveCorrectFunding(): void {
         this.user1SQRClaim.claimSig(
           this.user2Address,
           seedData.amount2,
-          seedData.transationId0,
+          seedData.transactionId0,
           seedData.nowPlus1m,
           signature,
         ),
@@ -121,14 +121,14 @@ export function shouldBehaveCorrectFunding(): void {
           this.owner,
           this.user1Address,
           seedData.amount1,
-          seedData.transationId0,
+          seedData.transactionId0,
           seedData.nowPlus1m,
         );
         await expect(
           this.user1SQRClaim.claimSig(
             this.user1Address,
             seedData.amount1,
-            seedData.transationId0,
+            seedData.transactionId0,
             seedData.nowPlus1m,
             signature,
           ),
@@ -140,7 +140,7 @@ export function shouldBehaveCorrectFunding(): void {
           this.user1SQRClaim.claim(
             this.user2Address,
             seedData.amount2,
-            seedData.transationId0,
+            seedData.transactionId0,
             seedData.nowPlus1m,
           ),
         ).revertedWith(errorMessage.onlyOwner);
@@ -153,7 +153,7 @@ export function shouldBehaveCorrectFunding(): void {
           this.owner2SQRClaim.claim(
             this.user1Address,
             seedData.amount1,
-            seedData.transationId0,
+            seedData.transactionId0,
             seedData.nowPlus1m,
           ),
         ).revertedWith(errorMessage.timeoutBlockerForTimestampLimit);
@@ -166,7 +166,7 @@ export function shouldBehaveCorrectFunding(): void {
           this.owner2,
           this.user1Address,
           seedData.amount1,
-          seedData.transationId0,
+          seedData.transactionId0,
           seedData.nowPlus1m,
         );
 
@@ -174,7 +174,7 @@ export function shouldBehaveCorrectFunding(): void {
           this.owner2SQRClaim.claimSig(
             this.user1Address,
             seedData.amount1,
-            seedData.transationId0,
+            seedData.transactionId0,
             seedData.nowPlus1m,
             signature,
           ),
@@ -186,26 +186,26 @@ export function shouldBehaveCorrectFunding(): void {
           this.owner2SQRClaim.claim(
             this.user1Address,
             seedData.amount1,
-            seedData.transationId0,
+            seedData.transactionId0,
             seedData.nowPlus1m,
           ),
         );
         const eventLog = findEvent<ClaimEventArgs>(receipt);
         expect(eventLog).not.undefined;
-        const [account, amount, transationIdHash0, timestamp] = eventLog?.args;
+        const [account, amount, transactionIdHash0, timestamp] = eventLog?.args;
         expect(account).eq(this.user1Address);
         expect(amount).eq(seedData.amount1);
-        expect(transationIdHash0).eq(seedData.transationIdHash0);
+        expect(transactionIdHash0).eq(seedData.transactionIdHash0);
         expect(timestamp).closeTo(seedData.now, seedData.timeDelta);
 
-        expect(await this.owner2SQRClaim.getTransactionIdHash(seedData.transationId0)).eq(
-          seedData.transationIdHash0,
+        expect(await this.owner2SQRClaim.getTransactionIdHash(seedData.transactionId0)).eq(
+          seedData.transactionIdHash0,
         );
 
         const transactionItem = await this.owner2SQRClaim.fetchTransactionItem(
-          seedData.transationId0,
+          seedData.transactionId0,
         );
-        expect(transactionItem[0]).eq(seedData.transationIdHash0);
+        expect(transactionItem[0]).eq(seedData.transactionIdHash0);
         expect(transactionItem[1][0]).eq(this.user1Address);
         expect(transactionItem[1][1]).eq(seedData.amount1);
 
@@ -217,7 +217,7 @@ export function shouldBehaveCorrectFunding(): void {
           this.owner2,
           this.user1Address,
           seedData.amount1,
-          seedData.transationId0,
+          seedData.transactionId0,
           seedData.nowPlus1m,
         );
 
@@ -225,17 +225,17 @@ export function shouldBehaveCorrectFunding(): void {
           this.user1SQRClaim.claimSig(
             this.user1Address,
             seedData.amount1,
-            seedData.transationId0,
+            seedData.transactionId0,
             seedData.nowPlus1m,
             signature,
           ),
         );
         const eventLog = findEvent<ClaimEventArgs>(receipt);
         expect(eventLog).not.undefined;
-        const [account, amount, transationIdHash0, timestamp] = eventLog?.args;
+        const [account, amount, transactionIdHash0, timestamp] = eventLog?.args;
         expect(account).eq(this.user1Address);
         expect(amount).eq(seedData.amount1);
-        expect(transationIdHash0).eq(seedData.transationIdHash0);
+        expect(transactionIdHash0).eq(seedData.transactionIdHash0);
         expect(timestamp).closeTo(seedData.now, seedData.timeDelta);
 
         await checkTotalBalance(this);
@@ -246,14 +246,14 @@ export function shouldBehaveCorrectFunding(): void {
           this.owner2,
           this.user2Address,
           seedData.amount2,
-          seedData.transationId0,
+          seedData.transactionId0,
           seedData.nowPlus1m,
         );
 
         this.user1SQRClaim.claimSig(
           this.user2Address,
           seedData.amount2,
-          seedData.transationId0,
+          seedData.transactionId0,
           seedData.nowPlus1m,
           signature,
         );
@@ -266,14 +266,14 @@ export function shouldBehaveCorrectFunding(): void {
             this.owner2,
             this.user1Address,
             seedData.amount1,
-            seedData.transationId0,
+            seedData.transactionId0,
             seedData.nowPlus1m,
           );
 
           await this.user1SQRClaim.claimSig(
             this.user1Address,
             seedData.amount1,
-            seedData.transationId0,
+            seedData.transactionId0,
             seedData.nowPlus1m,
             signature,
           );
@@ -297,7 +297,7 @@ export function shouldBehaveCorrectFunding(): void {
             this.owner2,
             this.user1Address,
             seedData.amount1,
-            seedData.transationId0,
+            seedData.transactionId0,
             seedData.nowPlus1m,
           );
 
@@ -305,7 +305,7 @@ export function shouldBehaveCorrectFunding(): void {
             this.user1SQRClaim.claimSig(
               this.user1Address,
               seedData.amount1,
-              seedData.transationId0,
+              seedData.transactionId0,
               seedData.nowPlus1m,
               signature,
             ),
@@ -317,7 +317,7 @@ export function shouldBehaveCorrectFunding(): void {
             this.owner2,
             this.user1Address,
             seedData.amount1,
-            seedData.transationId1,
+            seedData.transactionId1,
             seedData.nowPlus1m,
           );
 
@@ -325,7 +325,7 @@ export function shouldBehaveCorrectFunding(): void {
             this.user1SQRClaim.claimSig(
               this.user1Address,
               seedData.amount1,
-              seedData.transationId1,
+              seedData.transactionId1,
               seedData.nowPlus1m,
               signature,
             ),
@@ -340,14 +340,14 @@ export function shouldBehaveCorrectFunding(): void {
               this.owner2,
               this.user1Address,
               seedData.extraAmount1,
-              seedData.transationId1,
+              seedData.transactionId1,
               seedData.nowPlus1d2m,
             );
 
             await this.user1SQRClaim.claimSig(
               this.user1Address,
               seedData.extraAmount1,
-              seedData.transationId1,
+              seedData.transactionId1,
               seedData.nowPlus1d2m,
               signature,
             );

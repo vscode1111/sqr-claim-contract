@@ -43,14 +43,14 @@ function getChainConfig(
 }
 
 export const defaultNetwork: keyof DeployNetworks = 'bsc';
-// export const defaultNetwork: keyof DeployNetworks = "polygon";
+// export const defaultNetwork: keyof DeployNetworks = 'bscTestnet';
 
 const config: HardhatUserConfig = {
   defaultNetwork,
   etherscan: {
     apiKey: {
       bsc: getEnv('BSC_SCAN_API_KEY'),
-      polygon: getEnv('POLYGON_SCAN_API_KEY'),
+      bscTestnet: getEnv('BSCTESTNET_SCAN_API_KEY'),
     },
   },
   gasReporter: {
@@ -74,7 +74,7 @@ const config: HardhatUserConfig = {
       accounts: getNetworkAccounts(),
     },
     bsc: getChainConfig('bsc'),
-    polygon: getChainConfig('polygon'),
+    bscTestnet: getChainConfig('bscTestnet'),
   },
   paths: {
     artifacts: './artifacts',

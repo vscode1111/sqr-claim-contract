@@ -11,16 +11,18 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
     const users = await getUsers();
     const { ownerSQRClaim } = await getSQRClaimContext(users, sqrClaimAddress);
 
-    const [owner, sqrToken, balance] = await Promise.all([
+    const [owner, sqrToken, balance, claimDelay] = await Promise.all([
       ownerSQRClaim.owner(),
       ownerSQRClaim.sqrToken(),
       ownerSQRClaim.getBalance(),
+      ownerSQRClaim.claimDelay(),
     ]);
 
     const result = {
       owner,
       sqrToken,
       balance,
+      claimDelay,
     };
 
     console.table(result);

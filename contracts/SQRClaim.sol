@@ -19,8 +19,8 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
   }
 
   function initialize(address _newOwner, address _sqrToken, uint32 _claimDelay) public initializer {
-    require(_newOwner != address(0), "New owner address can't be the zero address");
-    require(_sqrToken != address(0), "SQR token address can't be the zero address");
+    require(_newOwner != address(0), "New owner address can't be zero");
+    require(_sqrToken != address(0), "SQR token address can't be zero");
 
     __Ownable_init();
     __UUPSUpgradeable_init();

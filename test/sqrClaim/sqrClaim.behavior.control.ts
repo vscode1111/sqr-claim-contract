@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { ZeroAddress } from 'ethers';
 import { waitTx } from '~common';
 import { contractConfig, seedData } from '~seeds';
-import { findEvent, getSQRClaimContext, getSQRTokenContext, getUsers } from '~utils';
+import { findEvent, getSQRClaimContext, getUsers } from '~utils';
 import { ChangeClaimDelayEventArgs, errorMessage } from '.';
 
 export function shouldBehaveCorrectControl(): void {
@@ -14,8 +14,6 @@ export function shouldBehaveCorrectControl(): void {
     });
 
     it('owner2 changes claimDelay', async function () {
-      await this.owner2SQRClaim.changeClaimDelay(seedData.claimDelay);
-
       const receipt = await waitTx(this.owner2SQRClaim.changeClaimDelay(seedData.claimDelay));
       const eventLog = findEvent<ChangeClaimDelayEventArgs>(receipt);
       expect(eventLog).not.undefined;
@@ -28,29 +26,22 @@ export function shouldBehaveCorrectControl(): void {
 
     it('owner tries to deploy with zero new owner address', async function () {
       const users = await getUsers();
-      const sqrTokenContext = await getSQRTokenContext(users);
-      const { sqrTokenAddress } = sqrTokenContext;
-
       await expect(
         getSQRClaimContext(users, {
+          ...contractConfig,
           newOwner: ZeroAddress,
-          sqrToken: sqrTokenAddress,
-          claimDelay: contractConfig.claimDelay,
         }),
-      ).revertedWith(errorMessage.newOwnerAddressCantBeTheZeroAddress);
+      ).revertedWith(errorMessage.newOwnerAddressCantBeZero);
     });
 
-    it('owner tries to deploy with zero new owner address', async function () {
+    it('owner tries to deploy with zero SQR token address', async function () {
       const users = await getUsers();
-      const { owner2Address } = users;
-
       await expect(
         getSQRClaimContext(users, {
-          newOwner: owner2Address,
+          ...contractConfig,
           sqrToken: ZeroAddress,
-          claimDelay: contractConfig.claimDelay,
         }),
-      ).revertedWith(errorMessage.sqrTokeAddressCantBeTheZeroAddress);
+      ).revertedWith(errorMessage.sqrTokeAddressCantBeZero);
     });
   });
 }

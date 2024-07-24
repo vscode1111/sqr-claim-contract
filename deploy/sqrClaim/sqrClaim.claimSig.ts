@@ -13,23 +13,23 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
     const context = await getContext(sqrTokenAddress, sqrClaimAddress);
     const { owner2, user1Address, user1SQRClaim } = context;
 
-    const transationId = seedData.transationId0;
+    const transactionId = seedData.transactionId0;
     const timestampLimit = seedData.nowPlus1m;
 
     const params = {
       account: user1Address,
       amount: seedData.amount1,
-      transationId,
+      transactionId,
       timestampLimit,
       signature: '',
     };
 
     params.signature = await signMessageForClaim(
       owner2,
-      user1Address,
-      seedData.amount1,
-      transationId,
-      timestampLimit,
+      params.account,
+      params.amount,
+      params.transactionId,
+      params.timestampLimit,
     );
 
     console.table(params);
@@ -38,7 +38,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
       user1SQRClaim.claimSig(
         params.account,
         params.amount,
-        params.transationId,
+        params.transactionId,
         params.timestampLimit,
         params.signature,
         await getTxOverrides(),
