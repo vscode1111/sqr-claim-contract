@@ -2,18 +2,18 @@ import { DeployProxyOptions } from '@openzeppelin/hardhat-upgrades/dist/utils';
 import { ethers, upgrades } from 'hardhat';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { getNetworkName } from '~common';
-import { SQR_CLAIM_NAME, SQR_TOKEN_NAME, TOKENS } from '~constants';
+import { WEB3_CLAIM_NAME, WEB3_TOKEN_NAME, TOKENS } from '~constants';
 import { ContractConfig, getContractArgs, getTokenArgs } from '~seeds';
-import { SQRClaim } from '~typechain-types/contracts/SQRClaim';
-import { SQRToken } from '~typechain-types/contracts/SQRToken';
-import { SQRClaim__factory } from '~typechain-types/factories/contracts/SQRClaim__factory';
-import { SQRToken__factory } from '~typechain-types/factories/contracts/SQRToken__factory';
+import { WEB3Claim } from '~typechain-types/contracts/WEB3Claim';
+import { WEB3Token } from '~typechain-types/contracts/WEB3Token';
+import { WEB3Claim__factory } from '~typechain-types/factories/contracts/WEB3Claim__factory';
+import { WEB3Token__factory } from '~typechain-types/factories/contracts/WEB3Token__factory';
 import {
   Addresses,
   ContextBase,
   DeployNetworks,
-  SQRClaimContext,
-  SQRTokenContext,
+  WEB3ClaimContext,
+  WEB3TokenContext,
   Users,
 } from '~types';
 
@@ -23,9 +23,9 @@ const OPTIONS: DeployProxyOptions = {
 };
 
 export function getAddresses(network: keyof DeployNetworks): Addresses {
-  const sqrClaimAddress = TOKENS.SQR_CLAIM[network];
+  const web3ClaimAddress = TOKENS.WEB3_CLAIM[network];
   return {
-    sqrClaimAddress,
+    web3ClaimAddress,
   };
 }
 
@@ -56,102 +56,102 @@ export async function getUsers(): Promise<Users> {
   };
 }
 
-export async function getSQRTokenContext(
+export async function getWEB3TokenContext(
   users: Users,
   deployData?: string | { newOnwer: string },
-): Promise<SQRTokenContext> {
+): Promise<WEB3TokenContext> {
   const { owner, user1, user2, user3, owner2, owner2Address } = users;
 
-  const sqrTokenFactory = (await ethers.getContractFactory(
-    SQR_TOKEN_NAME,
-  )) as any as SQRToken__factory;
+  const web3TokenFactory = (await ethers.getContractFactory(
+    WEB3_TOKEN_NAME,
+  )) as any as WEB3Token__factory;
 
-  let ownerSQRToken: SQRToken;
+  let ownerWEB3Token: WEB3Token;
 
   if (typeof deployData === 'string') {
-    ownerSQRToken = sqrTokenFactory.connect(owner).attach(deployData) as SQRToken;
+    ownerWEB3Token = web3TokenFactory.connect(owner).attach(deployData) as WEB3Token;
   } else {
     const newOnwer = deployData?.newOnwer ?? owner2Address;
-    ownerSQRToken = await sqrTokenFactory.connect(owner).deploy(...getTokenArgs(newOnwer));
+    ownerWEB3Token = await web3TokenFactory.connect(owner).deploy(...getTokenArgs(newOnwer));
   }
 
-  const sqrTokenAddress = await ownerSQRToken.getAddress();
+  const web3TokenAddress = await ownerWEB3Token.getAddress();
 
-  const user1SQRToken = ownerSQRToken.connect(user1);
-  const user2SQRToken = ownerSQRToken.connect(user2);
-  const user3SQRToken = ownerSQRToken.connect(user3);
-  const owner2SQRToken = ownerSQRToken.connect(owner2);
+  const user1WEB3Token = ownerWEB3Token.connect(user1);
+  const user2WEB3Token = ownerWEB3Token.connect(user2);
+  const user3WEB3Token = ownerWEB3Token.connect(user3);
+  const owner2WEB3Token = ownerWEB3Token.connect(owner2);
 
   return {
-    sqrTokenAddress,
-    ownerSQRToken,
-    user1SQRToken,
-    user2SQRToken,
-    user3SQRToken,
-    owner2SQRToken,
+    web3TokenAddress,
+    ownerWEB3Token,
+    user1WEB3Token,
+    user2WEB3Token,
+    user3WEB3Token,
+    owner2WEB3Token,
   };
 }
 
-export async function getSQRClaimContext(
+export async function getWEB3ClaimContext(
   users: Users,
   deployData?: string | ContractConfig,
-): Promise<SQRClaimContext> {
+): Promise<WEB3ClaimContext> {
   const { owner, user1, user2, user3, owner2 } = users;
 
-  const sqrClaimFactory = (await ethers.getContractFactory(
-    SQR_CLAIM_NAME,
-  )) as unknown as SQRClaim__factory;
-  const owner2SqrClaimFactory = (await ethers.getContractFactory(
-    SQR_CLAIM_NAME,
+  const web3ClaimFactory = (await ethers.getContractFactory(
+    WEB3_CLAIM_NAME,
+  )) as unknown as WEB3Claim__factory;
+  const owner2Web3ClaimFactory = (await ethers.getContractFactory(
+    WEB3_CLAIM_NAME,
     owner2,
-  )) as unknown as SQRClaim__factory;
+  )) as unknown as WEB3Claim__factory;
 
-  let ownerSQRClaim: SQRClaim;
+  let ownerWEB3Claim: WEB3Claim;
 
   if (typeof deployData === 'string') {
-    ownerSQRClaim = sqrClaimFactory.connect(owner).attach(deployData) as SQRClaim;
+    ownerWEB3Claim = web3ClaimFactory.connect(owner).attach(deployData) as WEB3Claim;
   } else {
-    ownerSQRClaim = (await upgrades.deployProxy(
-      sqrClaimFactory,
+    ownerWEB3Claim = (await upgrades.deployProxy(
+      web3ClaimFactory,
       getContractArgs(
         deployData?.newOwner ?? '',
-        deployData?.sqrToken ?? '',
+        deployData?.web3Token ?? '',
         deployData?.claimDelay ?? 0,
       ),
       OPTIONS,
-    )) as unknown as SQRClaim;
+    )) as unknown as WEB3Claim;
   }
 
-  const sqrClaimAddress = await ownerSQRClaim.getAddress();
+  const web3ClaimAddress = await ownerWEB3Claim.getAddress();
 
-  const user1SQRClaim = ownerSQRClaim.connect(user1);
-  const user2SQRClaim = ownerSQRClaim.connect(user2);
-  const user3SQRClaim = ownerSQRClaim.connect(user3);
-  const owner2SQRClaim = ownerSQRClaim.connect(owner2);
+  const user1WEB3Claim = ownerWEB3Claim.connect(user1);
+  const user2WEB3Claim = ownerWEB3Claim.connect(user2);
+  const user3WEB3Claim = ownerWEB3Claim.connect(user3);
+  const owner2WEB3Claim = ownerWEB3Claim.connect(owner2);
 
   return {
-    sqrClaimFactory,
-    owner2SqrClaimFactory,
-    sqrClaimAddress,
-    user1SQRClaim,
-    user2SQRClaim,
-    user3SQRClaim,
-    ownerSQRClaim,
-    owner2SQRClaim,
+    web3ClaimFactory,
+    owner2Web3ClaimFactory,
+    web3ClaimAddress,
+    user1WEB3Claim,
+    user2WEB3Claim,
+    user3WEB3Claim,
+    ownerWEB3Claim,
+    owner2WEB3Claim,
   };
 }
 
 export async function getContext(
-  sqrTokenAddress: string,
-  sqrClaimAddress: string,
+  web3TokenAddress: string,
+  web3ClaimAddress: string,
 ): Promise<ContextBase> {
   const users = await getUsers();
-  const sqrTokenContext = await getSQRTokenContext(users, sqrTokenAddress);
-  const sqrClaimContext = await getSQRClaimContext(users, sqrClaimAddress);
+  const web3TokenContext = await getWEB3TokenContext(users, web3TokenAddress);
+  const web3ClaimContext = await getWEB3ClaimContext(users, web3ClaimAddress);
 
   return {
     ...users,
-    ...sqrTokenContext,
-    ...sqrClaimContext,
+    ...web3TokenContext,
+    ...web3ClaimContext,
   };
 }

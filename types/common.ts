@@ -4,7 +4,7 @@ export interface DeployNetworks {
 }
 
 export interface Addresses {
-  sqrClaimAddress: string;
+  web3ClaimAddress: string;
 }
 
 export type StringNumber = string | number;

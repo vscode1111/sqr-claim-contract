@@ -1,4 +1,4 @@
-# Solidity smart contracts for SQR claim functionality
+# Solidity smart contracts for WEB3 claim functionality
 
 ## Getting Started
 

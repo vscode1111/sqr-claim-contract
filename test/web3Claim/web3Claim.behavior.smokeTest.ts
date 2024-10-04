@@ -21,13 +21,13 @@ const labels = {
 export async function owner2SendsTokens(that: ContextBase) {
   console.log(labels.owner2SendsTokens);
 
-  const balance = await that.owner2SQRClaim.getBalance();
+  const balance = await that.owner2WEB3Claim.getBalance();
   console.log(`balance: ${balance}`);
 
   if (balance < seedData.userInitBalance) {
     const diff = seedData.userInitBalance - balance;
     console.log(`diff: ${diff}`);
-    await waitTx(that.owner2SQRToken.transfer(that.sqrClaimAddress, diff), 'transfer');
+    await waitTx(that.owner2WEB3Token.transfer(that.web3ClaimAddress, diff), 'transfer');
   }
 }
 
@@ -35,7 +35,7 @@ export async function owner2ClaimsToUser1(that: ContextBase) {
   console.log(labels.ownerClaimsToUser1);
 
   const receipt = await waitTx(
-    that.owner2SQRClaim.claim(
+    that.owner2WEB3Claim.claim(
       that.user1Address,
       seedData.amount1,
       seedData.transactionId0,
@@ -67,7 +67,7 @@ export async function user2ClaimsSig(that: ContextBase) {
   console.log(`signature: ${signature}`);
 
   const receipt = await waitTx(
-    that.user1SQRClaim.claimSig(
+    that.user1WEB3Claim.claimSig(
       that.user2Address,
       seedData.amount2,
       seedData.transactionId1,

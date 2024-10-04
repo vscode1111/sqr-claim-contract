@@ -1,1 +1,1 @@
-export * from './sqrClaim';
+export * from './web3Claim';

@@ -10,7 +10,7 @@ import "./interfaces/IBalance.sol";
 
 // import "hardhat/console.sol";
 
-contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgradeable, IBalance {
+contract WEB3Claim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgradeable, IBalance {
   using ECDSA for bytes32;
 
   /// @custom:oz-upgrades-unsafe-allow constructor
@@ -18,15 +18,15 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     _disableInitializers();
   }
 
-  function initialize(address _newOwner, address _sqrToken, uint32 _claimDelay) public initializer {
+  function initialize(address _newOwner, address _web3Token, uint32 _claimDelay) public initializer {
     require(_newOwner != address(0), "New owner address can't be zero");
-    require(_sqrToken != address(0), "SQR token address can't be zero");
+    require(_web3Token != address(0), "WEB3 token address can't be zero");
 
     __Ownable_init();
     __UUPSUpgradeable_init();
 
     _transferOwnership(_newOwner);
-    sqrToken = IPermitToken(_sqrToken);
+    web3Token = IPermitToken(_web3Token);
     claimDelay = _claimDelay;
   }
 
@@ -34,7 +34,7 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
 
   //Variables, structs, modifiers, events------------------------
 
-  IPermitToken public sqrToken;
+  IPermitToken public web3Token;
   uint32 public claimDelay;
   mapping(address => FundItem) private _balances;
   mapping(bytes32 => TransactionItem) private _transactionIds;
@@ -61,7 +61,7 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
   }
 
   function getBalance() public view returns (uint256) {
-    return sqrToken.balanceOf(address(this));
+    return web3Token.balanceOf(address(this));
   }
 
   function getTransactionIdHash(string memory transactionId) public pure returns (bytes32) {
@@ -87,7 +87,7 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
   ) private nonReentrant {
     require(amount > 0, "Amount must be greater than zero");
     require(block.timestamp <= timestampLimit, "Timeout blocker for timestampLimit");
-    require(sqrToken.balanceOf(address(this)) >= amount, "Contract must have sufficient funds");
+    require(web3Token.balanceOf(address(this)) >= amount, "Contract must have sufficient funds");
 
     (bytes32 transactionIdHash, TransactionItem memory transactionItem) = fetchTransactionItem(
       transactionId
@@ -104,7 +104,7 @@ contract SQRClaim is OwnableUpgradeable, UUPSUpgradeable, ReentrancyGuardUpgrade
     fund.claimDate = uint32(block.timestamp);
 
     _transactionIds[transactionIdHash] = TransactionItem(account, amount);
-    sqrToken.transfer(account, amount);
+    web3Token.transfer(account, amount);
 
     emit Claim(account, amount, transactionIdHash, uint32(block.timestamp));
   }

@@ -3,6 +3,6 @@ import { verifyArgsRequired } from './deployData';
 
 export function getContractArgsEx() {
   return verifyArgsRequired
-    ? getContractArgs(contractConfig.newOwner, contractConfig.sqrToken, contractConfig.claimDelay)
+    ? getContractArgs(contractConfig.newOwner, contractConfig.web3Token, contractConfig.claimDelay)
     : undefined;
 }

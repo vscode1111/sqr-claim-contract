@@ -10,5 +10,5 @@ export const errorMessage = {
   timeoutBlockerForTimestampLimit: `Timeout blocker for timestampLimit`,
   timeBlockerForAccount: `Time blocker for account`,
   newOwnerAddressCantBeZero: `New owner address can't be zero`,
-  sqrTokeAddressCantBeZero: `SQR token address can't be zero`,
+  web3TokeAddressCantBeZero: `WEB3 token address can't be zero`,
 };

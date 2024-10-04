@@ -18,7 +18,7 @@ export function shouldBehaveCorrectFunding(): void {
         seedData.nowPlus1m,
       );
       await expect(
-        this.user1SQRClaim.claimSig(
+        this.user1WEB3Claim.claimSig(
           this.user1Address,
           seedData.amount1,
           seedData.transactionId0,
@@ -37,7 +37,7 @@ export function shouldBehaveCorrectFunding(): void {
         seedData.nowPlus1m,
       );
       await expect(
-        this.user1SQRClaim.claimSig(
+        this.user1WEB3Claim.claimSig(
           this.user1Address,
           seedData.zero,
           seedData.transactionId0,
@@ -57,7 +57,7 @@ export function shouldBehaveCorrectFunding(): void {
       );
 
       await expect(
-        this.user1SQRClaim.claimSig(
+        this.user1WEB3Claim.claimSig(
           this.user1Address,
           seedData.amount1,
           seedData.transactionId0,
@@ -77,7 +77,7 @@ export function shouldBehaveCorrectFunding(): void {
       );
 
       await expect(
-        this.user1SQRClaim.claimSig(
+        this.user1WEB3Claim.claimSig(
           this.user2Address,
           seedData.amount2,
           seedData.transactionId0,
@@ -89,11 +89,11 @@ export function shouldBehaveCorrectFunding(): void {
 
     describe('contract has funds', () => {
       beforeEach(async function () {
-        await this.owner2SQRToken.transfer(this.sqrClaimAddress, seedData.userInitBalance);
+        await this.owner2WEB3Token.transfer(this.web3ClaimAddress, seedData.userInitBalance);
       });
 
       it(INITIAL_POSITIVE_CHECK_TEST_TITLE, async function () {
-        expect(await getTokenBalance(this, this.sqrClaimAddress)).eq(seedData.userInitBalance);
+        expect(await getTokenBalance(this, this.web3ClaimAddress)).eq(seedData.userInitBalance);
         expect(await getTokenBalance(this, this.user1Address)).eq(seedData.zero);
         expect(await getTokenBalance(this, this.user2Address)).eq(seedData.zero);
         expect(await getTokenBalance(this, this.user3Address)).eq(seedData.zero);
@@ -102,15 +102,15 @@ export function shouldBehaveCorrectFunding(): void {
           seedData.totalAccountBalance - seedData.userInitBalance,
         );
 
-        const user1undItem = await this.user1SQRClaim.fetchFundItem(this.user1Address);
+        const user1undItem = await this.user1WEB3Claim.fetchFundItem(this.user1Address);
         expect(user1undItem.amount).eq(seedData.zero);
-        const user2fundItem = await this.user1SQRClaim.fetchFundItem(this.user2Address);
+        const user2fundItem = await this.user1WEB3Claim.fetchFundItem(this.user2Address);
         expect(user2fundItem.amount).eq(seedData.zero);
-        const user3fundItem = await this.user1SQRClaim.fetchFundItem(this.user3Address);
+        const user3fundItem = await this.user1WEB3Claim.fetchFundItem(this.user3Address);
         expect(user3fundItem.amount).eq(seedData.zero);
-        const ownerfundItem = await this.user1SQRClaim.fetchFundItem(this.ownerAddress);
+        const ownerfundItem = await this.user1WEB3Claim.fetchFundItem(this.ownerAddress);
         expect(ownerfundItem.amount).eq(seedData.zero);
-        const owner2fundItem = await this.user1SQRClaim.fetchFundItem(this.owner2Address);
+        const owner2fundItem = await this.user1WEB3Claim.fetchFundItem(this.owner2Address);
         expect(owner2fundItem.amount).eq(seedData.zero);
 
         await checkTotalBalance(this);
@@ -125,7 +125,7 @@ export function shouldBehaveCorrectFunding(): void {
           seedData.nowPlus1m,
         );
         await expect(
-          this.user1SQRClaim.claimSig(
+          this.user1WEB3Claim.claimSig(
             this.user1Address,
             seedData.amount1,
             seedData.transactionId0,
@@ -137,7 +137,7 @@ export function shouldBehaveCorrectFunding(): void {
 
       it('user1 tries to claim without permission', async function () {
         await expect(
-          this.user1SQRClaim.claim(
+          this.user1WEB3Claim.claim(
             this.user2Address,
             seedData.amount2,
             seedData.transactionId0,
@@ -150,7 +150,7 @@ export function shouldBehaveCorrectFunding(): void {
         await time.increaseTo(seedData.nowPlus1m);
 
         await expect(
-          this.owner2SQRClaim.claim(
+          this.owner2WEB3Claim.claim(
             this.user1Address,
             seedData.amount1,
             seedData.transactionId0,
@@ -171,7 +171,7 @@ export function shouldBehaveCorrectFunding(): void {
         );
 
         await expect(
-          this.owner2SQRClaim.claimSig(
+          this.owner2WEB3Claim.claimSig(
             this.user1Address,
             seedData.amount1,
             seedData.transactionId0,
@@ -183,7 +183,7 @@ export function shouldBehaveCorrectFunding(): void {
 
       it('owner2 claims correctly and check Claim event', async function () {
         const receipt = await waitTx(
-          this.owner2SQRClaim.claim(
+          this.owner2WEB3Claim.claim(
             this.user1Address,
             seedData.amount1,
             seedData.transactionId0,
@@ -198,11 +198,11 @@ export function shouldBehaveCorrectFunding(): void {
         expect(transactionIdHash0).eq(seedData.transactionIdHash0);
         expect(timestamp).closeTo(seedData.now, seedData.timeDelta);
 
-        expect(await this.owner2SQRClaim.getTransactionIdHash(seedData.transactionId0)).eq(
+        expect(await this.owner2WEB3Claim.getTransactionIdHash(seedData.transactionId0)).eq(
           seedData.transactionIdHash0,
         );
 
-        const transactionItem = await this.owner2SQRClaim.fetchTransactionItem(
+        const transactionItem = await this.owner2WEB3Claim.fetchTransactionItem(
           seedData.transactionId0,
         );
         expect(transactionItem[0]).eq(seedData.transactionIdHash0);
@@ -222,7 +222,7 @@ export function shouldBehaveCorrectFunding(): void {
         );
 
         const receipt = await waitTx(
-          this.user1SQRClaim.claimSig(
+          this.user1WEB3Claim.claimSig(
             this.user1Address,
             seedData.amount1,
             seedData.transactionId0,
@@ -250,7 +250,7 @@ export function shouldBehaveCorrectFunding(): void {
           seedData.nowPlus1m,
         );
 
-        this.user1SQRClaim.claimSig(
+        this.user1WEB3Claim.claimSig(
           this.user2Address,
           seedData.amount2,
           seedData.transactionId0,
@@ -270,7 +270,7 @@ export function shouldBehaveCorrectFunding(): void {
             seedData.nowPlus1m,
           );
 
-          await this.user1SQRClaim.claimSig(
+          await this.user1WEB3Claim.claimSig(
             this.user1Address,
             seedData.amount1,
             seedData.transactionId0,
@@ -280,12 +280,12 @@ export function shouldBehaveCorrectFunding(): void {
         });
 
         it(INITIAL_POSITIVE_CHECK_TEST_TITLE, async function () {
-          expect(await getTokenBalance(this, this.sqrClaimAddress)).eq(
+          expect(await getTokenBalance(this, this.web3ClaimAddress)).eq(
             seedData.userInitBalance - seedData.amount1,
           );
           expect(await getTokenBalance(this, this.user1Address)).eq(seedData.amount1);
 
-          const user1undItem = await this.user1SQRClaim.fetchFundItem(this.user1Address);
+          const user1undItem = await this.user1WEB3Claim.fetchFundItem(this.user1Address);
           expect(user1undItem.amount).eq(seedData.amount1);
           expect(user1undItem.claimDate).closeTo(seedData.now, seedData.timeDelta);
 
@@ -302,7 +302,7 @@ export function shouldBehaveCorrectFunding(): void {
           );
 
           await expect(
-            this.user1SQRClaim.claimSig(
+            this.user1WEB3Claim.claimSig(
               this.user1Address,
               seedData.amount1,
               seedData.transactionId0,
@@ -322,7 +322,7 @@ export function shouldBehaveCorrectFunding(): void {
           );
 
           await expect(
-            this.user1SQRClaim.claimSig(
+            this.user1WEB3Claim.claimSig(
               this.user1Address,
               seedData.amount1,
               seedData.transactionId1,
@@ -344,7 +344,7 @@ export function shouldBehaveCorrectFunding(): void {
               seedData.nowPlus1d2m,
             );
 
-            await this.user1SQRClaim.claimSig(
+            await this.user1WEB3Claim.claimSig(
               this.user1Address,
               seedData.extraAmount1,
               seedData.transactionId1,
@@ -354,13 +354,13 @@ export function shouldBehaveCorrectFunding(): void {
           });
 
           it(INITIAL_POSITIVE_CHECK_TEST_TITLE, async function () {
-            expect(await getTokenBalance(this, this.sqrClaimAddress)).eq(
+            expect(await getTokenBalance(this, this.web3ClaimAddress)).eq(
               seedData.userInitBalance - seedData.amount1 - seedData.extraAmount1,
             );
             expect(await getTokenBalance(this, this.user1Address)).eq(
               seedData.amount1 + seedData.extraAmount1,
             );
-            const user2fundItem = await this.user1SQRClaim.fetchFundItem(this.user2Address);
+            const user2fundItem = await this.user1WEB3Claim.fetchFundItem(this.user2Address);
             expect(user2fundItem.amount).eq(seedData.zero);
             await checkTotalBalance(this);
           });

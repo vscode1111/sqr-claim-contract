@@ -1,17 +1,17 @@
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { callWithTimerHre, getTxOverrides, waitTx } from '~common';
-import { SQR_CLAIM_NAME } from '~constants';
+import { WEB3_CLAIM_NAME } from '~constants';
 import { contractConfig, seedData } from '~seeds';
 import { getAddressesFromHre, getContext, signMessageForClaim } from '~utils';
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<void> => {
   await callWithTimerHre(async () => {
-    const { sqrClaimAddress } = getAddressesFromHre(hre);
-    console.log(`${SQR_CLAIM_NAME} ${sqrClaimAddress} is claiming with signature...`);
-    const sqrTokenAddress = contractConfig.sqrToken;
-    const context = await getContext(sqrTokenAddress, sqrClaimAddress);
-    const { owner2, user1Address, user1SQRClaim } = context;
+    const { web3ClaimAddress } = getAddressesFromHre(hre);
+    console.log(`${WEB3_CLAIM_NAME} ${web3ClaimAddress} is claiming with signature...`);
+    const web3TokenAddress = contractConfig.web3Token;
+    const context = await getContext(web3TokenAddress, web3ClaimAddress);
+    const { owner2, user1Address, user1WEB3Claim } = context;
 
     const transactionId = seedData.transactionId0;
     const timestampLimit = seedData.nowPlus1m;
@@ -35,7 +35,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
     console.table(params);
 
     await waitTx(
-      user1SQRClaim.claimSig(
+      user1WEB3Claim.claimSig(
         params.account,
         params.amount,
         params.transactionId,
@@ -48,6 +48,6 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<voi
   }, hre);
 };
 
-func.tags = [`${SQR_CLAIM_NAME}:claim-sig`];
+func.tags = [`${WEB3_CLAIM_NAME}:claim-sig`];
 
 export default func;

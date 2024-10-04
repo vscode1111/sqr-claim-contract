@@ -1,9 +1,9 @@
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { callWithTimerHre, sleep, verifyContract } from '~common';
-import { SQR_CLAIM_NAME } from '~constants';
+import { WEB3_CLAIM_NAME } from '~constants';
 import { contractConfig } from '~seeds';
-import { getSQRClaimContext, getUsers } from '~utils';
+import { getWEB3ClaimContext, getUsers } from '~utils';
 import { verifyRequired } from './deployData';
 import { getContractArgsEx } from './utils';
 
@@ -11,25 +11,25 @@ const pauseTime = 10;
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<void> => {
   await callWithTimerHre(async () => {
-    console.log(`${SQR_CLAIM_NAME} is deploying...`);
+    console.log(`${WEB3_CLAIM_NAME} is deploying...`);
     console.table(contractConfig);
     console.log(`Pause ${pauseTime} sec to make sure...`);
     await sleep(pauseTime * 1000);
 
     console.log(`Deploying...`);
-    const { sqrClaimAddress } = await getSQRClaimContext(await getUsers(), {
+    const { web3ClaimAddress } = await getWEB3ClaimContext(await getUsers(), {
       newOwner: contractConfig.newOwner,
-      sqrToken: contractConfig.sqrToken,
+      web3Token: contractConfig.web3Token,
       claimDelay: contractConfig.claimDelay,
     });
-    console.log(`${SQR_CLAIM_NAME} deployed to ${sqrClaimAddress}`);
+    console.log(`${WEB3_CLAIM_NAME} deployed to ${web3ClaimAddress}`);
     if (verifyRequired) {
-      await verifyContract(sqrClaimAddress, hre, getContractArgsEx());
-      console.log(`${SQR_CLAIM_NAME} deployed and verified to ${sqrClaimAddress}`);
+      await verifyContract(web3ClaimAddress, hre, getContractArgsEx());
+      console.log(`${WEB3_CLAIM_NAME} deployed and verified to ${web3ClaimAddress}`);
     }
   }, hre);
 };
 
-func.tags = [`${SQR_CLAIM_NAME}:deploy`];
+func.tags = [`${WEB3_CLAIM_NAME}:deploy`];
 
 export default func;

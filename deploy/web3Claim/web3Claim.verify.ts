@@ -1,18 +1,18 @@
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { callWithTimerHre, verifyContract } from '~common';
-import { SQR_CLAIM_NAME } from '~constants';
+import { WEB3_CLAIM_NAME } from '~constants';
 import { getAddressesFromHre } from '~utils';
 import { getContractArgsEx } from './utils';
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment): Promise<void> => {
   await callWithTimerHre(async () => {
-    const { sqrClaimAddress: sqrTokenAddress } = getAddressesFromHre(hre);
-    console.log(`${SQR_CLAIM_NAME} ${sqrTokenAddress} is verify...`);
-    await verifyContract(sqrTokenAddress, hre, getContractArgsEx());
+    const { web3ClaimAddress: web3TokenAddress } = getAddressesFromHre(hre);
+    console.log(`${WEB3_CLAIM_NAME} ${web3TokenAddress} is verify...`);
+    await verifyContract(web3TokenAddress, hre, getContractArgsEx());
   }, hre);
 };
 
-func.tags = [`${SQR_CLAIM_NAME}:verify`];
+func.tags = [`${WEB3_CLAIM_NAME}:verify`];
 
 export default func;

@@ -1,4 +1,4 @@
-import { ChangeClaimDelayEvent, ClaimEvent } from '~typechain-types/contracts/SQRClaim';
+import { ChangeClaimDelayEvent, ClaimEvent } from '~typechain-types/contracts/WEB3Claim';
 import { ContextBase, EventArgs } from '~types';
 
 type Fixture<T> = () => Promise<T>;

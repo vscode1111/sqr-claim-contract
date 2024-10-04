@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 
-contract SQRToken is ERC20, ERC20Burnable, ERC20Permit, Ownable, ReentrancyGuard {
+contract WEB3Token is ERC20, ERC20Burnable, ERC20Permit, Ownable, ReentrancyGuard {
   uint8 _decimals;
 
   constructor(

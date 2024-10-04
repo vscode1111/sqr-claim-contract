@@ -1,7 +1,7 @@
 import { Signer } from 'ethers';
-import { SQRClaim } from '~typechain-types/contracts/SQRClaim';
-import { SQRToken } from '~typechain-types/contracts/SQRToken';
-import { SQRClaim__factory } from '~typechain-types/factories/contracts/SQRClaim__factory';
+import { WEB3Claim } from '~typechain-types/contracts/WEB3Claim';
+import { WEB3Token } from '~typechain-types/contracts/WEB3Token';
+import { WEB3Claim__factory } from '~typechain-types/factories/contracts/WEB3Claim__factory';
 
 export interface Users {
   owner: Signer;
@@ -16,24 +16,24 @@ export interface Users {
   owner2Address: string;
 }
 
-export interface SQRTokenContext {
-  sqrTokenAddress: string;
-  ownerSQRToken: SQRToken;
-  user1SQRToken: SQRToken;
-  user2SQRToken: SQRToken;
-  user3SQRToken: SQRToken;
-  owner2SQRToken: SQRToken;
+export interface WEB3TokenContext {
+  web3TokenAddress: string;
+  ownerWEB3Token: WEB3Token;
+  user1WEB3Token: WEB3Token;
+  user2WEB3Token: WEB3Token;
+  user3WEB3Token: WEB3Token;
+  owner2WEB3Token: WEB3Token;
 }
 
-export interface SQRClaimContext {
-  sqrClaimFactory: SQRClaim__factory;
-  owner2SqrClaimFactory: SQRClaim__factory;
-  sqrClaimAddress: string;
-  user1SQRClaim: SQRClaim;
-  user2SQRClaim: SQRClaim;
-  user3SQRClaim: SQRClaim;
-  ownerSQRClaim: SQRClaim;
-  owner2SQRClaim: SQRClaim;
+export interface WEB3ClaimContext {
+  web3ClaimFactory: WEB3Claim__factory;
+  owner2Web3ClaimFactory: WEB3Claim__factory;
+  web3ClaimAddress: string;
+  user1WEB3Claim: WEB3Claim;
+  user2WEB3Claim: WEB3Claim;
+  user3WEB3Claim: WEB3Claim;
+  ownerWEB3Claim: WEB3Claim;
+  owner2WEB3Claim: WEB3Claim;
 }
 
-export type ContextBase = Users & SQRTokenContext & SQRClaimContext;
+export type ContextBase = Users & WEB3TokenContext & WEB3ClaimContext;
